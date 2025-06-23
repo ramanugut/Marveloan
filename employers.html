@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employers</title>
+    <style>
+        body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);color:#fff;min-height:100vh;margin:0;padding:0;}
+        .container{max-width:800px;margin:2rem auto;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);padding:1.5rem;border-radius:16px;}
+        h1{margin-bottom:1rem;}
+        table{width:100%;border-collapse:collapse;margin-top:1rem;}
+        th,td{padding:0.5rem;border-bottom:1px solid rgba(255,255,255,0.2);} 
+        th{background:rgba(0,0,0,0.2);}
+        input[type="file"]{margin-left:0.5rem;}
+        button{padding:0.4rem 0.8rem;margin-left:0.5rem;border:none;border-radius:4px;cursor:pointer;color:#fff;background:#667eea;}
+
+        .header{background:rgba(255,255,255,0.15);backdrop-filter:blur(20px);padding:0.75rem 1.5rem;display:flex;justify-content:space-between;position:sticky;top:0;}
+        .back{color:white;text-decoration:none;font-size:0.9rem;}
+    </style>
+</head>
+<body>
+    <div class="header"><a href="dashboard.html" class="back">&larr; Back to Dashboard</a></div>
+
+<div class="container">
+    <h1>Employers</h1>
+    <div>
+        <button onclick="exportEmployers()">Export</button>
+        <input type="file" id="importFile" accept="application/json">
+        <button onclick="importEmployers()">Import</button>
+    </div>
+    <table id="employersTable">
+        <thead>
+            <tr><th>Name</th><th>Code</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script type="module">
+import { db } from './firebase-config.js';
+import { collection, getDocs, setDoc, doc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
+
+async function load(){
+    try{
+        const snap = await getDocs(collection(db,'employers'));
+        employers = snap.docs.map(d=>d.data());
+    }catch(err){
+        console.error('Firebase load failed', err);
+        employers=[];
+    }
+    const tbody=document.querySelector('#employersTable tbody');
+    tbody.innerHTML='';
+    employers.forEach(e=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${e.name}</td><td>${e.code}</td>`;
+        tbody.appendChild(tr);
+    });
+}
+function exportEmployers(){
+    const data=JSON.stringify(employers);
+    const blob=new Blob([data],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='employers.json';a.click();URL.revokeObjectURL(url);
+}
+function importEmployers(){
+    const f=document.getElementById('importFile').files[0];
+    if(!f){alert('Select a file');return;}
+    const r=new FileReader();
+    r.onload=function(){
+        try{
+            const arr=JSON.parse(r.result); if(Array.isArray(arr)){
+                arr.forEach(async e=>{ if(!employers.find(x=>x.code===e.code)) employers.push(e); await setDoc(doc(db,'employers',e.code),e); });
+                load();
+            }else{alert('Invalid file');}
+        }catch(e){alert('Invalid file');}
+    };
+    r.readAsText(f);
+}
+let employers=[];load();
+</script>
+</body>
+</html>
