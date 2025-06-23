@@ -544,6 +544,11 @@
             const button = event.target.closest('.menu-item');
             if (button) button.classList.add('active');
 
+            if (page === 'add-customer') {
+                window.location.href = 'add-customer.html';
+                return;
+            }
+
             const welcomeTitle = document.querySelector('.welcome-title');
             const welcomeSubtitle = document.querySelector('.welcome-subtitle');
             const config = {
