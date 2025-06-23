@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers</title>
+    <style>
+        body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);color:#fff;min-height:100vh;margin:0;padding:0;}
+        .container{max-width:1000px;margin:2rem auto;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);padding:1.5rem;border-radius:16px;}
+        h1{margin-bottom:1rem;}
+        table{width:100%;border-collapse:collapse;margin-top:1rem;}
+        th,td{padding:0.5rem;border-bottom:1px solid rgba(255,255,255,0.2);} 
+        th{background:rgba(0,0,0,0.2);}
+        input[type="text"]{padding:0.5rem;border-radius:4px;border:1px solid rgba(255,255,255,0.3);width:100%;max-width:300px;background:rgba(0,0,0,0.1);color:#fff;}
+        button{padding:0.4rem 0.8rem;margin-left:0.5rem;border:none;border-radius:4px;cursor:pointer;color:#fff;background:#667eea;}
+        .actions button{margin-right:0.25rem;background:#764ba2;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Customers</h1>
+    <div>
+        <input type="text" id="search" placeholder="Search by name, surname, ID or cell">
+        <button onclick="exportCustomers()">Export</button>
+        <button onclick="window.location.href='add-customer.html'">Add Customer</button>
+    </div>
+    <table id="customersTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>ID</th>
+                <th>Cell</th>
+                <th>Employer</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script>
+const customers = JSON.parse(localStorage.getItem('customers')) || [];
+const loans = JSON.parse(localStorage.getItem('loans')) || [];
+const tbody = document.querySelector('#customersTable tbody');
+const searchInput = document.getElementById('search');
+function render(list){
+    tbody.innerHTML='';
+    list.forEach(c=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${c.firstName||''}</td><td>${c.lastName||''}</td><td>${c.nationalId||''}</td><td>${c.phoneNumber||''}</td><td>${c.employerName||''}</td><td class='actions'></td>`;
+        const actions=tr.querySelector('.actions');
+        const editBtn=document.createElement('button');
+        editBtn.textContent='Edit';
+        editBtn.onclick=()=>window.location.href=`add-customer.html?id=${c.id}`;
+        const delBtn=document.createElement('button');
+        delBtn.textContent='Delete';
+        delBtn.onclick=()=>deleteCustomer(c.id);
+        actions.appendChild(editBtn);actions.appendChild(delBtn);
+        tbody.appendChild(tr);
+    });
+}
+function deleteCustomer(id){
+    const inUse = loans.some(l=>l.clientId===id);
+    if(inUse){alert('Cannot delete customer with linked transactions');return;}
+    if(confirm('Delete this customer?')){
+        let list=JSON.parse(localStorage.getItem('customers'))||[];
+        list=list.filter(c=>c.id!==id);
+        localStorage.setItem('customers',JSON.stringify(list));
+        render(list);
+    }
+}
+function exportCustomers(){
+    const data=JSON.stringify(JSON.parse(localStorage.getItem('customers'))||[]);
+    const blob=new Blob([data],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='customers.json';a.click();URL.revokeObjectURL(url);
+}
+searchInput.addEventListener('input',()=>{
+    const q=searchInput.value.toLowerCase();
+    const filtered=customers.filter(c=>
+        (c.firstName&&c.firstName.toLowerCase().includes(q))||
+        (c.lastName&&c.lastName.toLowerCase().includes(q))||
+        (c.nationalId&&c.nationalId.includes(q))||
+        (c.phoneNumber&&c.phoneNumber.includes(q)));
+    render(filtered);
+});
+render(customers);
+</script>
+</body>
+</html>
