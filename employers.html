@@ -43,10 +43,9 @@ async function load(){
     try{
         const snap = await getDocs(collection(db,'employers'));
         employers = snap.docs.map(d=>d.data());
-        localStorage.setItem('employers',JSON.stringify(employers));
     }catch(err){
         console.error('Firebase load failed', err);
-        employers=JSON.parse(localStorage.getItem('employers'))||[];
+        employers=[];
     }
     const tbody=document.querySelector('#employersTable tbody');
     tbody.innerHTML='';
@@ -57,7 +56,7 @@ async function load(){
     });
 }
 function exportEmployers(){
-    const data=JSON.stringify(JSON.parse(localStorage.getItem('employers'))||[]);
+    const data=JSON.stringify(employers);
     const blob=new Blob([data],{type:'application/json'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download='employers.json';a.click();URL.revokeObjectURL(url);
@@ -69,9 +68,7 @@ function importEmployers(){
     r.onload=function(){
         try{
             const arr=JSON.parse(r.result); if(Array.isArray(arr)){
-                let list=JSON.parse(localStorage.getItem('employers'))||[];
-                arr.forEach(async e=>{ if(!list.find(x=>x.code===e.code)) list.push(e); await setDoc(doc(db,'employers',e.code),e); });
-                localStorage.setItem('employers',JSON.stringify(list));
+                arr.forEach(async e=>{ if(!employers.find(x=>x.code===e.code)) employers.push(e); await setDoc(doc(db,'employers',e.code),e); });
                 load();
             }else{alert('Invalid file');}
         }catch(e){alert('Invalid file');}

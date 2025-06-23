@@ -359,6 +359,7 @@
             document.getElementById('formActions').style.display=currentStep===4?'none':'flex';
         }
         const form=document.getElementById('customerForm');
+        let savedId=null;
         const employerNameInput=document.getElementById('employerName');
         const employerCodeInput=document.getElementById('employerCode');
 
@@ -374,17 +375,14 @@
         const urlParams=new URLSearchParams(window.location.search);
         const editId=urlParams.get('id');
         if(editId){
-            let customer=null;
             try{
                 const snap=await getDoc(doc(collection(db,'customers'), editId));
-                if(snap.exists()) customer=snap.data();
+                if(snap.exists()){
+                    const customer=snap.data();
+                    Object.keys(customer).forEach(k=>{if(form.elements[k]) form.elements[k].value=customer[k];});
+                }
             }catch(err){
                 console.error('Firebase load failed', err);
-                const customers=JSON.parse(localStorage.getItem('customers'))||[];
-                customer=customers.find(c=>c.id==editId);
-            }
-            if(customer){
-                Object.keys(customer).forEach(k=>{if(form.elements[k]) form.elements[k].value=customer[k];});
             }
         }
 
@@ -393,27 +391,15 @@
             if(validateCurrentStep()){
                 const data={};
                 new FormData(form).forEach((v,k)=>data[k]=v);
-                const customers = JSON.parse(localStorage.getItem('customers')) || [];
                 if(editId){
-                    const idx=customers.findIndex(c=>c.id==editId);
-                    if(idx>-1){data.id=customers[idx].id;customers[idx]=data;}
+                    data.id = editId;
                 }else{
-                    data.id=Date.now();
-                    customers.push(data);
+                    data.id = Date.now().toString();
                 }
-                localStorage.setItem('recentCustomer', JSON.stringify(data));
-                localStorage.setItem('customers', JSON.stringify(customers));
 
-                let employers=JSON.parse(localStorage.getItem('employers'))||[];
                 let employerDoc=null;
                 if(data.employerName){
-                    let emp=employers.find(e=>e.name.toLowerCase()==data.employerName.toLowerCase());
-                    if(!emp){
-                        emp={name:data.employerName,code:data.employerCode||generateCode(data.employerName)};
-                        employers.push(emp);
-                    }
-                    employerDoc=emp;
-                    localStorage.setItem('employers',JSON.stringify(employers));
+                    employerDoc={name:data.employerName,code:data.employerCode||generateCode(data.employerName)};
                 }
 
                 try{
@@ -423,7 +409,11 @@
                     }
                 }catch(err){
                     console.error('Firebase save failed', err);
+                    alert('Failed to save customer');
+                    return;
                 }
+
+                savedId = data.id;
 
                 setTimeout(()=>{currentStep=4;updateSteps();},500);
             }
@@ -434,7 +424,9 @@
             updateSteps();
         }
         function viewCustomer(){
-            window.location.href='customer-profile.html';
+            if(savedId){
+                window.location.href = `customer-profile.html?id=${savedId}`;
+            }
         }
         updateSteps();
         window.nextStep = nextStep;

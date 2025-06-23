@@ -521,11 +521,12 @@
         import { db } from './firebase-config.js';
         import { doc, getDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
 
-        const cached = JSON.parse(localStorage.getItem('recentCustomer')) || {};
-        let customer = cached;
-        if(cached.id){
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        let customer = {};
+        if(id){
             try{
-                const snap = await getDoc(doc(db,'customers',cached.id.toString()));
+                const snap = await getDoc(doc(db,'customers',id));
                 if(snap.exists()) customer = snap.data();
             }catch(err){
                 console.error('Firebase load failed', err);
@@ -564,10 +565,9 @@
         try{
             const loanSnap = await getDocs(collection(db,'loans'));
             loans = loanSnap.docs.map(d=>d.data());
-            localStorage.setItem('loans', JSON.stringify(loans));
         }catch(err){
             console.error('Firebase load failed', err);
-            loans = JSON.parse(localStorage.getItem('loans')) || [];
+            loans = [];
         }
         const loanRows = document.getElementById('loanRows');
         if (loanRows) {
