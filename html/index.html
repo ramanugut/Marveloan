@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marveloan - Login</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="logo">
+            <h1>Marveloan</h1>
+            <p>Loan Management System</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-wrapper">
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <span class="input-icon">📧</span>
+                </div>
+                <div class="error-message" id="emailError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <span class="input-icon" id="togglePassword">👁️</span>
+                </div>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <div class="form-options">
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                <span class="spinner" id="spinner"></span>
+                <span id="btnText">Sign In</span>
+            </button>
+
+            <div class="success-message" id="successMessage"></div>
+        </form>
+
+        <div class="divider">
+            <span>or continue with</span>
+        </div>
+
+        <div class="social-login">
+            <button class="social-btn" id="googleLogin">
+                <span>🔵</span>
+                Google
+            </button>
+            <button class="social-btn" id="microsoftLogin">
+                <span>🟦</span>
+                Microsoft
+            </button>
+        </div>
+        <div style="text-align:center;margin-top:1rem;">
+            <a href="signup.html" style="color:white;text-decoration:underline;">Create an account</a>
+        </div>
+    </div>
+
+
+    
+    <script type="module" src="../js/index.js"></script>
+</body>
+</html>

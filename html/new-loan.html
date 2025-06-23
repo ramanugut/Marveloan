@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marveloan - New Loan Application</title>
+    <link rel="stylesheet" href="../css/new-loan.css">
+</head>
+<body>
+    <div class="header">
+        <a href="dashboard.html" class="back">&larr; Back to Dashboard</a>
+    </div>
+    <div class="container">
+        <h1>New Loan Application</h1>
+        <form id="loanForm">
+            <div class="step active" id="step1">
+                <div class="form-group">
+                    <label for="search">Search Client</label>
+                    <input type="text" id="search" placeholder="Enter name or ID">
+                </div>
+                <ul class="results" id="results"></ul>
+            </div>
+            <div class="step" id="step2">
+                <p><strong>Client:</strong> <span id="clientName"></span></p>
+                <div class="form-group">
+                    <label for="product">Loan Product</label>
+                    <select id="product">
+                        <option value="short" data-rate="0.05" data-term="1">Short Term (1 month @5%/mo)</option>
+                        <option value="personal" data-rate="0.03" data-term="6">Personal Loan (6 months @3%/mo)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Loan Amount</label>
+                    <input type="number" id="amount" min="100" step="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="term">Term (months)</label>
+                    <select id="term"></select>
+                </div>
+                <div class="form-group">
+                    <label>Estimated Monthly Installment</label>
+                    <div id="installment">R0</div>
+                </div>
+            </div>
+            <div class="step" id="step3">
+                <div class="summary" id="review"></div>
+            </div>
+            <div class="actions">
+                <button type="button" class="btn-secondary" id="prevBtn">Previous</button>
+                <div>
+                    <button type="button" class="btn-secondary" id="nextBtn">Next</button>
+                    <button type="submit" class="btn-primary" id="submitBtn" style="display:none">Create Loan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="module" src="../js/new-loan.js"></script>
+</body>
+</html>
