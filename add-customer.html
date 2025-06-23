@@ -233,9 +233,15 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Employer Name</label>
-                            <input type="text" class="form-input" name="employerName" placeholder="Enter employer name">
+                            <label class="form-label">Employer <span class="required">*</span></label>
+                            <input type="text" class="form-input" id="employerName" name="employerName" placeholder="Enter employer name" required>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Employer Code</label>
+                            <input type="text" class="form-input" id="employerCode" name="employerCode" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Job Title</label>
                             <input type="text" class="form-input" name="jobTitle" placeholder="Enter job title">
@@ -347,20 +353,55 @@
             document.getElementById('formActions').style.display=currentStep===4?'none':'flex';
         }
         const form=document.getElementById('customerForm');
+        const employerNameInput=document.getElementById('employerName');
+        const employerCodeInput=document.getElementById('employerCode');
+
+        function generateCode(name){
+            const prefix=name.trim().slice(0,3).toUpperCase();
+            return prefix+Date.now().toString().slice(-4);
+        }
+
+        employerNameInput.addEventListener('input',()=>{
+            employerCodeInput.value = employerNameInput.value ? generateCode(employerNameInput.value) : '';
+        });
+
+        const urlParams=new URLSearchParams(window.location.search);
+        const editId=urlParams.get('id');
+        if(editId){
+            const customers=JSON.parse(localStorage.getItem('customers'))||[];
+            const customer=customers.find(c=>c.id==editId);
+            if(customer){
+                Object.keys(customer).forEach(k=>{if(form.elements[k]) form.elements[k].value=customer[k];});
+            }
+        }
+
         form.addEventListener('submit',function(e){
             e.preventDefault();
             if(validateCurrentStep()){
                 const data={};
                 new FormData(form).forEach((v,k)=>data[k]=v);
-                data.id = Date.now();
-                localStorage.setItem('recentCustomer', JSON.stringify(data));
                 const customers = JSON.parse(localStorage.getItem('customers')) || [];
-                customers.push(data);
+                if(editId){
+                    const idx=customers.findIndex(c=>c.id==editId);
+                    if(idx>-1){data.id=customers[idx].id;customers[idx]=data;}
+                }else{
+                    data.id=Date.now();
+                    customers.push(data);
+                }
+                localStorage.setItem('recentCustomer', JSON.stringify(data));
                 localStorage.setItem('customers', JSON.stringify(customers));
-                setTimeout(()=>{
-                    currentStep=4;
-                    updateSteps();
-                },500);
+
+                let employers=JSON.parse(localStorage.getItem('employers'))||[];
+                if(data.employerName){
+                    let emp=employers.find(e=>e.name.toLowerCase()==data.employerName.toLowerCase());
+                    if(!emp){
+                        emp={name:data.employerName,code:data.employerCode||generateCode(data.employerName)};
+                        employers.push(emp);
+                    }
+                    localStorage.setItem('employers',JSON.stringify(employers));
+                }
+
+                setTimeout(()=>{currentStep=4;updateSteps();},500);
             }
         });
         function addAnother(){

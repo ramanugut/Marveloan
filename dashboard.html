@@ -446,6 +446,7 @@
             <div class="menu-section">
                 <div class="menu-title">Customer Management</div>
                 <button class="menu-item" onclick="navigate('customers')"><span class="menu-icon">👥</span>Customers</button>
+                <button class="menu-item" onclick="navigate('employers')"><span class="menu-icon">🏢</span>Employers</button>
                 <button class="menu-item" onclick="navigate('leads')"><span class="menu-icon">🎯</span>Leads</button>
                 <button class="menu-item" onclick="navigate('kyc')"><span class="menu-icon">📋</span>KYC Verification</button>
             </div>
@@ -546,6 +547,18 @@
 
             if (page === 'add-customer') {
                 window.location.href = 'add-customer.html';
+                return;
+            }
+            if (page === 'customers') {
+                window.location.href = 'customers.html';
+                return;
+            }
+            if (page === 'employers') {
+                window.location.href = 'employers.html';
+                return;
+            }
+            if (page === 'new-application') {
+                window.location.href = 'new-loan.html';
                 return;
             }
 
