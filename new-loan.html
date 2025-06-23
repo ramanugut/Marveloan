@@ -91,7 +91,9 @@
             </div>
         </form>
     </div>
-<script>
+<script type="module">
+import { db } from './firebase-config.js';
+import { collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
 const customers = JSON.parse(localStorage.getItem('customers')) || [];
 let currentStep = 1;
 let selectedCustomer = null;
@@ -189,7 +191,7 @@ function populateReview(){
 document.getElementById('nextBtn').addEventListener('click',nextStep);
 document.getElementById('prevBtn').addEventListener('click',prevStep);
 
-document.getElementById('loanForm').addEventListener('submit',function(e){
+document.getElementById('loanForm').addEventListener('submit',async function(e){
     e.preventDefault();
     const productSel = document.getElementById('product');
     const rate = parseFloat(productSel.options[productSel.selectedIndex].dataset.rate);
@@ -210,6 +212,13 @@ document.getElementById('loanForm').addEventListener('submit',function(e){
     const loans = JSON.parse(localStorage.getItem('loans')) || [];
     loans.push(loan);
     localStorage.setItem('loans', JSON.stringify(loans));
+
+    try{
+        await setDoc(doc(collection(db,'loans'), loan.id.toString()), loan);
+    }catch(err){
+        console.error('Firebase save failed', err);
+    }
+
     alert('Loan application created!');
     window.location.href='dashboard.html';
 });
