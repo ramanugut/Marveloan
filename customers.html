@@ -240,12 +240,10 @@ async function loadData(){
             if(!c.status) c.status='active';
             if(!c.creditScore) c.creditScore=Math.floor(620+Math.random()*130);
         });
-        localStorage.setItem('customers', JSON.stringify(customers));
-        localStorage.setItem('loans', JSON.stringify(loans));
     }catch(err){
         console.error('Firebase load failed', err);
-        customers = JSON.parse(localStorage.getItem('customers')) || [];
-        loans = JSON.parse(localStorage.getItem('loans')) || [];
+        customers = [];
+        loans = [];
     }
     applyFilters();
 }
@@ -326,7 +324,6 @@ function deleteCustomer(id){
     const idx=customers.findIndex(c=>c.id==id);
     if(idx>-1){
         customers.splice(idx,1);
-        localStorage.setItem('customers',JSON.stringify(customers));
         deleteDoc(doc(db,'customers',id.toString())).catch(console.error);
         applyFilters();
     }
@@ -334,8 +331,7 @@ function deleteCustomer(id){
 }
 
 function viewCustomer(id){
-    const cust=customers.find(c=>c.id==id);
-    if(cust){localStorage.setItem('recentCustomer',JSON.stringify(cust));window.location.href='customer-profile.html';}
+    window.location.href = `customer-profile.html?id=${id}`;
 }
 
 function updateBulk(){
@@ -374,7 +370,6 @@ document.getElementById('deactivateSelected').addEventListener('click',()=>{
             setDoc(doc(db,'customers',cust.id.toString()), cust).catch(console.error);
         }
     });
-    localStorage.setItem('customers',JSON.stringify(customers));
     applyFilters();
 });
 
@@ -387,7 +382,7 @@ const importFile=document.getElementById('importFile');
 document.getElementById('importBtn').addEventListener('click',()=>importFile.click());
 importFile.addEventListener('change',e=>{
     const file=e.target.files[0];if(!file) return;const reader=new FileReader();
-    reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(Array.isArray(data)){data.forEach(async d=>{if(!d.id) d.id=Date.now()+Math.random();customers.push(d);await setDoc(doc(db,'customers',d.id.toString()),d);});localStorage.setItem('customers',JSON.stringify(customers));applyFilters();}}catch(err){alert('Invalid file');}};reader.readAsText(file);
+    reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(Array.isArray(data)){data.forEach(async d=>{if(!d.id) d.id=Date.now()+Math.random();customers.push(d);await setDoc(doc(db,'customers',d.id.toString()),d);});applyFilters();}}catch(err){alert('Invalid file');}};reader.readAsText(file);
 });
 
 document.getElementById('addBtn').addEventListener('click',()=>window.location.href='add-customer.html');

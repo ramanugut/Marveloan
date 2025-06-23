@@ -98,10 +98,9 @@ let customers = [];
 try{
     const snap = await getDocs(collection(db,'customers'));
     customers = snap.docs.map(d=>d.data());
-    localStorage.setItem('customers', JSON.stringify(customers));
 }catch(err){
     console.error('Firebase load failed', err);
-    customers = JSON.parse(localStorage.getItem('customers')) || [];
+    customers = [];
 }
 let currentStep = 1;
 let selectedCustomer = null;
@@ -217,10 +216,6 @@ document.getElementById('loanForm').addEventListener('submit',async function(e){
         installment: parseFloat(installment.toFixed(2)),
         status:'Application'
     };
-    const loans = JSON.parse(localStorage.getItem('loans')) || [];
-    loans.push(loan);
-    localStorage.setItem('loans', JSON.stringify(loans));
-
     try{
         await setDoc(doc(collection(db,'loans'), loan.id.toString()), loan);
     }catch(err){
