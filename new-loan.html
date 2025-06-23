@@ -93,8 +93,16 @@
     </div>
 <script type="module">
 import { db } from './firebase-config.js';
-import { collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
-const customers = JSON.parse(localStorage.getItem('customers')) || [];
+import { collection, doc, setDoc, getDocs } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
+let customers = [];
+try{
+    const snap = await getDocs(collection(db,'customers'));
+    customers = snap.docs.map(d=>d.data());
+    localStorage.setItem('customers', JSON.stringify(customers));
+}catch(err){
+    console.error('Firebase load failed', err);
+    customers = JSON.parse(localStorage.getItem('customers')) || [];
+}
 let currentStep = 1;
 let selectedCustomer = null;
 const resultsList = document.getElementById('results');

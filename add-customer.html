@@ -309,7 +309,7 @@
 
     <script type="module">
         import { db } from './firebase-config.js';
-        import { collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
+        import { collection, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
         let currentStep = 1;
         const totalSteps = 3;
 
@@ -374,8 +374,15 @@
         const urlParams=new URLSearchParams(window.location.search);
         const editId=urlParams.get('id');
         if(editId){
-            const customers=JSON.parse(localStorage.getItem('customers'))||[];
-            const customer=customers.find(c=>c.id==editId);
+            let customer=null;
+            try{
+                const snap=await getDoc(doc(collection(db,'customers'), editId));
+                if(snap.exists()) customer=snap.data();
+            }catch(err){
+                console.error('Firebase load failed', err);
+                const customers=JSON.parse(localStorage.getItem('customers'))||[];
+                customer=customers.find(c=>c.id==editId);
+            }
             if(customer){
                 Object.keys(customer).forEach(k=>{if(form.elements[k]) form.elements[k].value=customer[k];});
             }

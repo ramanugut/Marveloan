@@ -35,9 +35,19 @@
         <tbody></tbody>
     </table>
 </div>
-<script>
-function load(){
-    employers=JSON.parse(localStorage.getItem('employers'))||[];
+<script type="module">
+import { db } from './firebase-config.js';
+import { collection, getDocs, setDoc, doc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
+
+async function load(){
+    try{
+        const snap = await getDocs(collection(db,'employers'));
+        employers = snap.docs.map(d=>d.data());
+        localStorage.setItem('employers',JSON.stringify(employers));
+    }catch(err){
+        console.error('Firebase load failed', err);
+        employers=JSON.parse(localStorage.getItem('employers'))||[];
+    }
     const tbody=document.querySelector('#employersTable tbody');
     tbody.innerHTML='';
     employers.forEach(e=>{
@@ -60,7 +70,7 @@ function importEmployers(){
         try{
             const arr=JSON.parse(r.result); if(Array.isArray(arr)){
                 let list=JSON.parse(localStorage.getItem('employers'))||[];
-                arr.forEach(e=>{ if(!list.find(x=>x.code===e.code)) list.push(e); });
+                arr.forEach(async e=>{ if(!list.find(x=>x.code===e.code)) list.push(e); await setDoc(doc(db,'employers',e.code),e); });
                 localStorage.setItem('employers',JSON.stringify(list));
                 load();
             }else{alert('Invalid file');}
