@@ -440,32 +440,32 @@
         <nav class="sidebar" id="sidebar">
             <div class="menu-section">
                 <div class="menu-title">Dashboard</div>
-                <button class="menu-item active" onclick="navigate('dashboard')"><span class="menu-icon">🏠</span>Home</button>
-                <button class="menu-item" onclick="navigate('analytics')"><span class="menu-icon">📊</span>Analytics</button>
+                <button class="menu-item active" onclick="navigate('dashboard', event)"><span class="menu-icon">🏠</span>Home</button>
+                <button class="menu-item" onclick="navigate('analytics', event)"><span class="menu-icon">📊</span>Analytics</button>
             </div>
             <div class="menu-section">
                 <div class="menu-title">Customer Management</div>
-                <button class="menu-item" onclick="navigate('customers')"><span class="menu-icon">👥</span>Customers</button>
-                <button class="menu-item" onclick="navigate('leads')"><span class="menu-icon">🎯</span>Leads</button>
-                <button class="menu-item" onclick="navigate('kyc')"><span class="menu-icon">📋</span>KYC Verification</button>
+                <button class="menu-item" onclick="navigate('customers', event)"><span class="menu-icon">👥</span>Customers</button>
+                <button class="menu-item" onclick="navigate('leads', event)"><span class="menu-icon">🎯</span>Leads</button>
+                <button class="menu-item" onclick="navigate('kyc', event)"><span class="menu-icon">📋</span>KYC Verification</button>
             </div>
             <div class="menu-section">
                 <div class="menu-title">Loan Operations</div>
-                <button class="menu-item" onclick="navigate('applications')"><span class="menu-icon">📝</span>Applications</button>
-                <button class="menu-item" onclick="navigate('underwriting')"><span class="menu-icon">🔍</span>Underwriting</button>
-                <button class="menu-item" onclick="navigate('disbursement')"><span class="menu-icon">💸</span>Disbursement</button>
-                <button class="menu-item" onclick="navigate('collections')"><span class="menu-icon">💰</span>Collections<span class="menu-badge">12</span></button>
+                <button class="menu-item" onclick="navigate('applications', event)"><span class="menu-icon">📝</span>Applications</button>
+                <button class="menu-item" onclick="navigate('underwriting', event)"><span class="menu-icon">🔍</span>Underwriting</button>
+                <button class="menu-item" onclick="navigate('disbursement', event)"><span class="menu-icon">💸</span>Disbursement</button>
+                <button class="menu-item" onclick="navigate('collections', event)"><span class="menu-icon">💰</span>Collections<span class="menu-badge">12</span></button>
             </div>
             <div class="menu-section">
                 <div class="menu-title">Financial Management</div>
-                <button class="menu-item" onclick="navigate('cashbook')"><span class="menu-icon">📚</span>Cash Book</button>
-                <button class="menu-item" onclick="navigate('reconciliation')"><span class="menu-icon">⚖️</span>Reconciliation</button>
-                <button class="menu-item" onclick="navigate('reports')"><span class="menu-icon">📈</span>Reports</button>
+                <button class="menu-item" onclick="navigate('cashbook', event)"><span class="menu-icon">📚</span>Cash Book</button>
+                <button class="menu-item" onclick="navigate('reconciliation', event)"><span class="menu-icon">⚖️</span>Reconciliation</button>
+                <button class="menu-item" onclick="navigate('reports', event)"><span class="menu-icon">📈</span>Reports</button>
             </div>
             <div class="menu-section">
                 <div class="menu-title">System</div>
-                <button class="menu-item" onclick="navigate('settings')"><span class="menu-icon">⚙️</span>Settings</button>
-                <button class="menu-item" onclick="navigate('help')"><span class="menu-icon">❓</span>Help & Support</button>
+                <button class="menu-item" onclick="navigate('settings', event)"><span class="menu-icon">⚙️</span>Settings</button>
+                <button class="menu-item" onclick="navigate('help', event)"><span class="menu-icon">❓</span>Help & Support</button>
                 <button class="menu-item" onclick="logout()"><span class="menu-icon">🚪</span>Log Out</button>
             </div>
         </nav>
@@ -498,37 +498,37 @@
                 </div>
             </div>
             <div class="quick-actions">
-                <div class="action-card blue glass" onclick="navigate('add-customer')">
+                <div class="action-card blue glass" onclick="navigate('add-customer', event)">
                     <div class="action-icon">👤</div>
                     <h3 class="action-title">Add New Customer</h3>
                     <p class="action-description">Create a new customer profile and start their journey</p>
                     <button class="action-button">Create Customer</button>
                 </div>
-                <div class="action-card purple glass" onclick="navigate('new-application')">
+                <div class="action-card purple glass" onclick="navigate('new-application', event)">
                     <div class="action-icon">📝</div>
                     <h3 class="action-title">New Loan Application</h3>
                     <p class="action-description">Process a new loan application quickly and efficiently</p>
                     <button class="action-button">Start Application</button>
                 </div>
-                <div class="action-card green glass" onclick="navigate('disbursement')">
+                <div class="action-card green glass" onclick="navigate('disbursement', event)">
                     <div class="action-icon">💸</div>
                     <h3 class="action-title">Loan Disbursement</h3>
                     <p class="action-description">Disburse approved loans to customers</p>
                     <button class="action-button">Disburse Loans</button>
                 </div>
-                <div class="action-card orange glass" onclick="navigate('collections')">
+                <div class="action-card orange glass" onclick="navigate('collections', event)">
                     <div class="action-icon">💰</div>
                     <h3 class="action-title">Collections</h3>
                     <p class="action-description">Manage loan repayments and collection activities</p>
                     <button class="action-button">Manage Collections</button>
                 </div>
-                <div class="action-card pink glass" onclick="navigate('reports')">
+                <div class="action-card pink glass" onclick="navigate('reports', event)">
                     <div class="action-icon">📊</div>
                     <h3 class="action-title">Generate Reports</h3>
                     <p class="action-description">Create detailed reports and analytics</p>
                     <button class="action-button">View Reports</button>
                 </div>
-                <div class="action-card teal glass" onclick="navigate('reconciliation')">
+                <div class="action-card teal glass" onclick="navigate('reconciliation', event)">
                     <div class="action-icon">⚖️</div>
                     <h3 class="action-title">Reconciliation</h3>
                     <p class="action-description">Reconcile accounts and transactions</p>
@@ -539,13 +539,19 @@
     </div>
 
     <script>
-        function navigate(page) {
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-            const button = event.target.closest('.menu-item');
-            if (button) button.classList.add('active');
+        function navigate(page, evt) {
+            if (evt) {
+                document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+                const button = evt.target.closest('.menu-item');
+                if (button) button.classList.add('active');
+            }
 
             if (page === 'add-customer') {
                 window.location.href = 'add-customer.html';
+                return;
+            }
+            if (page === 'new-application') {
+                window.location.href = 'new-loan.html';
                 return;
             }
 
