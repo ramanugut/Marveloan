@@ -185,8 +185,10 @@
         </div>
         <div class="pagination" id="pagination"></div>
     </div>
+
 <script>
 const PAGE_SIZE = 10;
+
 const customers = JSON.parse(localStorage.getItem('customers')) || [];
 const loans = JSON.parse(localStorage.getItem('loans')) || [];
 const tbody = document.querySelector('#customersTable tbody');
@@ -247,6 +249,7 @@ function renderTable(pageList){
     });
 }
 
+
 function showActionsMenu(id,btn){
     const menu = document.createElement('div');
     menu.style.position='absolute';
@@ -275,6 +278,7 @@ function deleteCustomer(id){
     if(use){alert('Cannot delete customer with linked transactions');return;}
     const idx=customers.findIndex(c=>c.id==id);
     if(idx>-1){customers.splice(idx,1);localStorage.setItem('customers',JSON.stringify(customers));applyFilters();}
+
 }
 
 function viewCustomer(id){
