@@ -561,6 +561,16 @@
                 return;
             }
 
+            if (page === 'disbursement') {
+                window.location.href = 'loan-disbursement.html';
+                return;
+            }
+
+            if (page === 'collections') {
+                window.location.href = 'collections.html';
+                return;
+            }
+
             const welcomeTitle = document.querySelector('.welcome-title');
             const welcomeSubtitle = document.querySelector('.welcome-subtitle');
             const config = {
