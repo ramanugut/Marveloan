@@ -385,9 +385,14 @@
                 Microsoft
             </button>
         </div>
+        <div style="text-align:center;margin-top:1rem;">
+            <a href="signup.html" style="color:white;text-decoration:underline;">Create an account</a>
+        </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { auth } from './firebase-config.js';
+        import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js';
         // Toggle password visibility
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
@@ -482,27 +487,27 @@
             }
 
             if (isValid) {
-                // Show loading state
                 loginBtn.disabled = true;
                 spinner.style.display = 'inline-block';
                 btnText.textContent = 'Signing In...';
 
-                // Simulate login process
-                setTimeout(() => {
-                    // Hide loading state
-                    loginBtn.disabled = false;
-                    spinner.style.display = 'none';
-                    btnText.textContent = 'Sign In';
-
-                    // Show success message
-                    successMessage.textContent = 'Login successful! Redirecting...';
-                    successMessage.style.display = 'block';
-
-                    // Simulate redirect
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                }, 2000);
+                signInWithEmailAndPassword(auth, email, password)
+                    .then(() => {
+                        loginBtn.disabled = false;
+                        spinner.style.display = 'none';
+                        btnText.textContent = 'Sign In';
+                        successMessage.textContent = 'Login successful! Redirecting...';
+                        successMessage.style.display = 'block';
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    })
+                    .catch((error) => {
+                        loginBtn.disabled = false;
+                        spinner.style.display = 'none';
+                        btnText.textContent = 'Sign In';
+                        showError('password', error.message);
+                    });
             }
         });
 
@@ -548,17 +553,6 @@
         });
     </script>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js';
-        const firebaseConfig = {
-            apiKey: 'AIzaSyDe1eY3KUfuY9LAL9l-NYZmbu7MFqB33Vc',
-            authDomain: 'marveloan-d74a9.firebaseapp.com',
-            projectId: 'marveloan-d74a9',
-            storageBucket: 'marveloan-d74a9.firebasestorage.app',
-            messagingSenderId: '558943376658',
-            appId: '1:558943376658:web:7a511643e701e202214fcb'
-        };
-        const app = initializeApp(firebaseConfig);
-    </script>
+    
 </body>
 </html>
