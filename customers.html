@@ -37,9 +37,34 @@
         .action-btn:hover{background:rgba(255,255,255,0.3);transform:translateY(-2px);}        
         .primary-btn{background:#4caf50;}
         .primary-btn:hover{background:#45a049;}
-        .stats-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;}
+        .stats-toggle{
+            background:rgba(255,255,255,0.1);
+            backdrop-filter:blur(15px);
+            border:1px solid rgba(255,255,255,0.2);
+            border-radius:12px;
+            padding:.75rem 1rem;
+            margin-bottom:1.5rem;
+            cursor:pointer;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            color:white;
+            font-weight:500;
+            transition:.3s;
+        }
+        .stats-cards{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+            gap:1rem;
+            margin-bottom:1.5rem;
+            overflow:hidden;
+            max-height:0;
+            transition:.4s;
+        }
+        .stats-cards.expanded{max-height:200px;margin-top:1rem;}
         .stat-card{padding:1rem;border-radius:1rem;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);text-align:center;}
         .stat-number{font-size:1.5rem;font-weight:700;margin-bottom:.25rem;}
+        .stat-label{color:rgba(255,255,255,0.7);font-size:.8rem;}
         .filters-bar{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);padding:1rem;border-radius:1rem;margin-bottom:1.5rem;}
         .filter-group{display:flex;align-items:center;gap:.5rem;font-size:.85rem;}
         .filter-select{padding:.4rem .75rem;border-radius:.5rem;border:none;background:rgba(255,255,255,0.2);color:white;}
@@ -114,6 +139,10 @@
                 <button class="action-btn primary-btn" id="addBtn">➕ Add New Customer</button>
                 <input type="file" id="importFile" accept="application/json" style="display:none">
             </div>
+        </div>
+        <div class="stats-toggle" onclick="toggleStats()">
+            <span>📊 View Statistics</span>
+            <span id="stats-arrow">▼</span>
         </div>
         <div class="stats-cards" id="statsCards"></div>
         <div class="filters-bar">
@@ -397,6 +426,13 @@ function renderPagination(){
     next.className='pagination-btn';next.textContent='Next \u2192';next.disabled=currentPage===pages;
     next.onclick=()=>{currentPage++;render();};
     pagination.appendChild(next);
+}
+
+function toggleStats(){
+    const grid=document.getElementById('statsCards');
+    grid.classList.toggle('expanded');
+    const arrow=document.getElementById('stats-arrow');
+    arrow.textContent=grid.classList.contains('expanded')?'▲':'▼';
 }
 
 applyFilters();
