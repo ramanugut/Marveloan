@@ -3,101 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customers</title>
+    <title>Customer Management - LoanFlow</title>
     <style>
-        body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);color:#fff;min-height:100vh;margin:0;padding:0;}
-        .container{max-width:1000px;margin:2rem auto;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);padding:1.5rem;border-radius:16px;}
-        h1{margin-bottom:1rem;}
-        table{width:100%;border-collapse:collapse;margin-top:1rem;}
-        th,td{padding:0.5rem;border-bottom:1px solid rgba(255,255,255,0.2);} 
-        th{background:rgba(0,0,0,0.2);}
-        input[type="text"]{padding:0.5rem;border-radius:4px;border:1px solid rgba(255,255,255,0.3);width:100%;max-width:300px;background:rgba(0,0,0,0.1);color:#fff;}
-        button{padding:0.4rem 0.8rem;margin-left:0.5rem;border:none;border-radius:4px;cursor:pointer;color:#fff;background:#667eea;}
-        .actions button{margin-right:0.25rem;background:#764ba2;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+            background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);
+            min-height:100vh;color:white;
+        }
+        a{color:inherit;text-decoration:none;}
+        .header{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:1rem 1.5rem;background:rgba(255,255,255,0.1);
+            backdrop-filter:blur(10px);position:sticky;top:0;z-index:10;
+            flex-wrap:wrap;gap:.5rem;
+        }
+        .logo{display:flex;align-items:center;font-weight:bold;font-size:1.25rem;gap:.5rem;}
+        .logo-icon{width:36px;height:36px;background:white;border-radius:8px;color:#667eea;font-weight:700;display:flex;align-items:center;justify-content:center;}
+        .header-search{flex:1;max-width:400px;position:relative;}
+        .search-input{width:100%;padding:.65rem .75rem .65rem 2.5rem;border:none;border-radius:9999px;background:rgba(255,255,255,0.2);color:white;}
+        .search-input::placeholder{color:rgba(255,255,255,0.7);}        
+        .search-icon{position:absolute;top:50%;left:1rem;transform:translateY(-50%);color:rgba(255,255,255,0.7);}        
+        .user-info{display:flex;align-items:center;gap:.75rem;}
+        .notification-badge{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;}
+        .notification-badge::after{content:attr(data-count);position:absolute;top:-4px;right:-4px;width:18px;height:18px;font-size:.65rem;background:#ff4444;border-radius:9999px;display:flex;align-items:center;justify-content:center;}
+        .user-avatar{width:36px;height:36px;border-radius:50%;background:#4caf50;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:.85rem;}
+        .main-content{max-width:1400px;margin:0 auto;padding:2rem 1rem;}
+        .page-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
+        .page-title{font-size:2rem;font-weight:700;}
+        .page-subtitle{opacity:.85;margin-top:.25rem;font-size:.9rem;}
+        .header-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+        .action-btn{display:flex;align-items:center;gap:.25rem;padding:.6rem 1rem;border:none;border-radius:.5rem;background:rgba(255,255,255,0.2);color:white;cursor:pointer;font-size:.85rem;transition:.3s;}
+        .action-btn:hover{background:rgba(255,255,255,0.3);transform:translateY(-2px);}        
+        .primary-btn{background:#4caf50;}
+        .primary-btn:hover{background:#45a049;}
+        .stats-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;}
+        .stat-card{padding:1rem;border-radius:1rem;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);text-align:center;}
+        .stat-number{font-size:1.5rem;font-weight:700;margin-bottom:.25rem;}
+        .filters-bar{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);padding:1rem;border-radius:1rem;margin-bottom:1.5rem;}
+        .filter-group{display:flex;align-items:center;gap:.5rem;font-size:.85rem;}
+        .filter-select{padding:.4rem .75rem;border-radius:.5rem;border:none;background:rgba(255,255,255,0.2);color:white;}
+        .filter-select option{background:#667eea;color:white;}
+        .customers-card{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:1rem;overflow:hidden;}
+        .customers-header{display:flex;align-items:center;padding:1rem;border-bottom:1px solid rgba(255,255,255,0.1);}
+        .customers-title{display:flex;align-items:center;gap:.5rem;font-weight:600;font-size:1.1rem;}
+        .title-icon{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:.75rem;}
+        .customers-count{margin-left:auto;background:rgba(255,255,255,0.2);padding:.25rem .75rem;border-radius:1rem;font-size:.8rem;}
+        .bulk-actions{display:none;align-items:center;gap:.75rem;padding:.5rem 1rem;background:rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);}
+        .bulk-actions.show{display:flex;}
+        .bulk-btn{padding:.4rem .75rem;border-radius:.5rem;border:none;background:rgba(255,255,255,0.2);color:white;font-size:.75rem;cursor:pointer;}
+        .customers-table{width:100%;border-collapse:collapse;font-size:.9rem;}
+        .customers-table th,.customers-table td{padding:1rem;border-bottom:1px solid rgba(255,255,255,0.1);text-align:left;}
+        .customers-table th{background:rgba(255,255,255,0.05);font-weight:600;}
+        .customers-table tbody tr{cursor:pointer;transition:.3s;}
+        .customers-table tbody tr:hover{background:rgba(255,255,255,0.1);transform:translateX(4px);}        
+        .customer-info{display:flex;align-items:center;gap:.75rem;}
+        .customer-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:.8rem;}
+        .loan-count{background:rgba(255,255,255,0.2);padding:.2rem .5rem;border-radius:.5rem;font-size:.75rem;}
+        .status-badge{padding:.25rem .5rem;border-radius:.75rem;font-size:.75rem;font-weight:700;display:inline-block;}
+        .status-active{background:#4caf50;}
+        .status-inactive{background:#757575;}
+        .status-pending{background:#ff9800;}
+        .status-blacklisted{background:#f44336;}
+        .actions-btn{padding:.25rem .5rem;border:none;border-radius:.5rem;background:rgba(255,255,255,0.2);color:white;font-size:.8rem;cursor:pointer;}
+        .pagination{display:flex;justify-content:center;align-items:center;gap:.5rem;margin-top:1rem;flex-wrap:wrap;}
+        .pagination-btn{padding:.5rem .75rem;border:none;border-radius:.5rem;background:rgba(255,255,255,0.2);color:white;font-size:.85rem;cursor:pointer;transition:.3s;}
+        .pagination-btn:hover{background:rgba(255,255,255,0.3);}        
+        .pagination-btn.active{background:#4caf50;}
+        .pagination-btn:disabled{opacity:.5;cursor:not-allowed;}
 
-        .header{background:rgba(255,255,255,0.15);backdrop-filter:blur(20px);padding:0.75rem 1.5rem;display:flex;justify-content:space-between;position:sticky;top:0;}
-        .back{color:white;text-decoration:none;font-size:0.9rem;}
+        @media(max-width:768px){
+            .header{flex-direction:column;align-items:flex-start;}
+            .header-search{width:100%;max-width:none;}
+            .user-info{margin-left:auto;}
+            .customers-table th,.customers-table td{padding:.75rem;font-size:.8rem;}
+        }
+        @media(max-width:480px){
+            .page-header{flex-direction:column;align-items:flex-start;}
+            .header-actions{width:100%;justify-content:flex-start;}
+            .filters-bar{flex-direction:column;align-items:flex-start;}
+            .customers-table{font-size:.8rem;}
+            .stat-card{padding:.75rem;}
+        }
     </style>
 </head>
 <body>
-    <div class="header"><a href="dashboard.html" class="back">&larr; Back to Dashboard</a></div>
-
-<div class="container">
-    <h1>Customers</h1>
-    <div>
-        <input type="text" id="search" placeholder="Search by name, surname, ID or cell">
-        <button onclick="exportCustomers()">Export</button>
-        <button onclick="window.location.href='add-customer.html'">Add Customer</button>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">L</div>
+            <span>LoanFlow</span>
+        </div>
+        <div class="header-search">
+            <div class="search-icon">🔍</div>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search customers, loans...">
+        </div>
+        <div class="user-info">
+            <div class="notification-badge" data-count="3">🔔</div>
+            <div class="user-avatar">U</div>
+        </div>
     </div>
-    <table id="customersTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>ID</th>
-                <th>Cell</th>
-                <th>Employer</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
-<script type="module">
-import { db } from './firebase-config.js';
-import { collection, doc, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
+    <div class="main-content">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Customer Management</h1>
+                <p class="page-subtitle">Manage all your customers and their loan profiles</p>
+            </div>
+            <div class="header-actions">
+                <button class="action-btn" id="exportBtn">📊 Export List</button>
+                <button class="action-btn" id="importBtn">📥 Import Customers</button>
+                <button class="action-btn primary-btn" id="addBtn">➕ Add New Customer</button>
+                <input type="file" id="importFile" accept="application/json" style="display:none">
+            </div>
+        </div>
+        <div class="stats-cards" id="statsCards"></div>
+        <div class="filters-bar">
+            <div class="filter-group">
+                <span class="filter-label">Status:</span>
+                <select class="filter-select" id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="pending">Pending</option>
+                    <option value="blacklisted">Blacklisted</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Loan Status:</span>
+                <select class="filter-select" id="loanFilter">
+                    <option value="">All Loans</option>
+                    <option value="has">Has Active Loans</option>
+                    <option value="none">No Active Loans</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Date Joined:</span>
+                <select class="filter-select" id="dateFilter">
+                    <option value="">All Time</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="90">Last 90 Days</option>
+                    <option value="365">This Year</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Credit Score:</span>
+                <select class="filter-select" id="scoreFilter">
+                    <option value="">All Scores</option>
+                    <option value="750">Excellent (750+)</option>
+                    <option value="700">Good (700-749)</option>
+                    <option value="650">Fair (650-699)</option>
+                    <option value="0">Poor (&lt;650)</option>
+                </select>
+            </div>
+        </div>
+        <div class="customers-card">
+            <div class="customers-header">
+                <h3 class="customers-title"><div class="title-icon">👥</div>Customer List</h3>
+                <div class="customers-count" id="customersCount"></div>
+            </div>
+            <div class="bulk-actions" id="bulkActions">
+                <div class="selected-count" id="selectedCount"></div>
+                <button class="bulk-btn" id="emailSelected">📧 Send Email</button>
+                <button class="bulk-btn" id="reportSelected">📄 Generate Report</button>
+                <button class="bulk-btn" id="deactivateSelected">🚫 Deactivate</button>
+            </div>
+            <table class="customers-table" id="customersTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Credit Score</th>
+                        <th>Active Loans</th>
+                        <th>Total Borrowed</th>
+                        <th>Date Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+<script>
+const PAGE_SIZE = 10;
+
 const customers = JSON.parse(localStorage.getItem('customers')) || [];
 const loans = JSON.parse(localStorage.getItem('loans')) || [];
 const tbody = document.querySelector('#customersTable tbody');
-const searchInput = document.getElementById('search');
-function render(list){
+const customersCount = document.getElementById('customersCount');
+const statsCards = document.getElementById('statsCards');
+const pagination = document.getElementById('pagination');
+let filtered = [];
+let currentPage = 1;
+
+// ensure extra properties exist
+customers.forEach(c=>{
+    if(!c.status) c.status='active';
+    if(!c.creditScore){ c.creditScore = Math.floor(620+Math.random()*130); }
+});
+localStorage.setItem('customers', JSON.stringify(customers));
+
+function computeStats(list){
+    const total = list.length;
+    const active = list.filter(c=>c.status==='active').length;
+    const now = Date.now();
+    const month = list.filter(c=> now - parseInt(c.id) <= 30*24*60*60*1000 ).length;
+    const pending = list.filter(c=>c.status==='pending').length;
+    statsCards.innerHTML = `
+        <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Total Customers</div></div>
+        <div class="stat-card"><div class="stat-number">${active}</div><div class="stat-label">Active Customers</div></div>
+        <div class="stat-card"><div class="stat-number">${month}</div><div class="stat-label">New This Month</div></div>
+        <div class="stat-card"><div class="stat-number">${pending}</div><div class="stat-label">Pending Review</div></div>`;
+}
+
+function getLoanInfo(id){
+    const custLoans = loans.filter(l=>l.clientId==id);
+    const active = custLoans.filter(l=>l.status!=='Closed');
+    const total = custLoans.reduce((s,l)=>s+ (parseFloat(l.amount)||0),0);
+    return {activeCount:active.length,totalBorrowed:total};
+}
+
+function formatMoney(n){return 'R '+(n||0).toLocaleString();}
+
+function renderTable(pageList){
     tbody.innerHTML='';
-    list.forEach(c=>{
+    pageList.forEach(c=>{
+        const {activeCount,totalBorrowed} = getLoanInfo(c.id);
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${c.firstName||''}</td><td>${c.lastName||''}</td><td>${c.nationalId||''}</td><td>${c.phoneNumber||''}</td><td>${c.employerName||''}</td><td class='actions'></td>`;
-        const actions=tr.querySelector('.actions');
-        const editBtn=document.createElement('button');
-        editBtn.textContent='Edit';
-        editBtn.onclick=()=>window.location.href=`add-customer.html?id=${c.id}`;
-        const delBtn=document.createElement('button');
-        delBtn.textContent='Delete';
-        delBtn.onclick=()=>deleteCustomer(c.id);
-        actions.appendChild(editBtn);actions.appendChild(delBtn);
+        tr.innerHTML=`
+            <td><input type="checkbox" data-id="${c.id}" class="rowCheck"></td>
+            <td><div class="customer-info"><div class="customer-avatar" style="background:#4caf50">${(c.firstName?c.firstName[0]:'')+(c.lastName?c.lastName[0]:'')}</div><div class="customer-details"><h4>${c.firstName||''} ${c.lastName||''}</h4><div class="customer-id">${c.nationalId||''}</div></div></div></td>
+            <td><div>${c.phoneNumber||''}</div><div style="font-size:.75rem;opacity:.7;">${c.email||''}</div></td>
+            <td><span class="status-badge status-${c.status}">${c.status.charAt(0).toUpperCase()+c.status.slice(1)}</span></td>
+            <td>${c.creditScore||'-'}</td>
+            <td><span class="loan-count">${activeCount}</span></td>
+            <td>${formatMoney(totalBorrowed)}</td>
+            <td>${new Date(parseInt(c.id)).toLocaleDateString()}</td>
+            <td><button class="actions-btn" data-id="${c.id}">⋮</button></td>`;
+        tr.addEventListener('click',()=>viewCustomer(c.id));
+        tr.querySelectorAll('input').forEach(inp=>inp.addEventListener('click',e=>{e.stopPropagation();updateBulk();}));
+        tr.querySelector('.actions-btn').addEventListener('click',e=>{e.stopPropagation();showActionsMenu(c.id,e.target);});
         tbody.appendChild(tr);
     });
 }
-async function deleteCustomer(id){
-    const inUse = loans.some(l=>l.clientId===id);
-    if(inUse){alert('Cannot delete customer with linked transactions');return;}
-    if(confirm('Delete this customer?')){
-        let list=JSON.parse(localStorage.getItem('customers'))||[];
-        list=list.filter(c=>c.id!==id);
-        localStorage.setItem('customers',JSON.stringify(list));
-        try{
-            await deleteDoc(doc(collection(db,'customers'), id.toString()));
-        }catch(err){
-            console.error('Firebase delete failed', err);
-        }
-        render(list);
-    }
+
+
+function showActionsMenu(id,btn){
+    const menu = document.createElement('div');
+    menu.style.position='absolute';
+    menu.style.background='rgba(0,0,0,0.8)';
+    menu.style.color='white';
+    menu.style.padding='.5rem';
+    menu.style.borderRadius='.5rem';
+    menu.style.zIndex=100;
+    menu.innerHTML = `<div style="cursor:pointer;padding:.25rem 0;" data-act="edit">Edit</div><div style="cursor:pointer;padding:.25rem 0;" data-act="delete">Delete</div>`;
+    document.body.appendChild(menu);
+    const rect=btn.getBoundingClientRect();
+    menu.style.left=rect.left+'px';
+    menu.style.top=rect.bottom+'px';
+    function remove(){menu.remove();document.removeEventListener('click',remove);}
+    document.addEventListener('click',remove);
+    menu.addEventListener('click',e=>{
+        const act=e.target.getAttribute('data-act');
+        if(act==='edit'){window.location.href=`add-customer.html?id=${id}`;}
+        if(act==='delete'){deleteCustomer(id);}remove();
+    });
 }
-function exportCustomers(){
-    const data=JSON.stringify(JSON.parse(localStorage.getItem('customers'))||[]);
-    const blob=new Blob([data],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download='customers.json';a.click();URL.revokeObjectURL(url);
+
+function deleteCustomer(id){
+    if(!confirm('Delete this customer?')) return;
+    const use = loans.some(l=>l.clientId==id);
+    if(use){alert('Cannot delete customer with linked transactions');return;}
+    const idx=customers.findIndex(c=>c.id==id);
+    if(idx>-1){customers.splice(idx,1);localStorage.setItem('customers',JSON.stringify(customers));applyFilters();}
+
 }
-searchInput.addEventListener('input',()=>{
-    const q=searchInput.value.toLowerCase();
-    const filtered=customers.filter(c=>
-        (c.firstName&&c.firstName.toLowerCase().includes(q))||
-        (c.lastName&&c.lastName.toLowerCase().includes(q))||
-        (c.nationalId&&c.nationalId.includes(q))||
-        (c.phoneNumber&&c.phoneNumber.includes(q)));
-    render(filtered);
+
+function viewCustomer(id){
+    const cust=customers.find(c=>c.id==id);
+    if(cust){localStorage.setItem('recentCustomer',JSON.stringify(cust));window.location.href='customer-profile.html';}
+}
+
+function updateBulk(){
+    const checks=[...document.querySelectorAll('.rowCheck')];
+    const selected=checks.filter(c=>c.checked).map(c=>parseInt(c.dataset.id));
+    const bulk=document.getElementById('bulkActions');
+    const countEl=document.getElementById('selectedCount');
+    if(selected.length){
+        bulk.classList.add('show');
+        countEl.textContent=`${selected.length} selected`;
+    }else{bulk.classList.remove('show');}
+}
+
+document.getElementById('selectAll').addEventListener('change',function(){
+    document.querySelectorAll('.rowCheck').forEach(c=>{c.checked=this.checked;});
+    updateBulk();
 });
-render(customers);
+
+document.getElementById('emailSelected').addEventListener('click',()=>{
+    const emails=[...document.querySelectorAll('.rowCheck:checked')].map(c=>{
+        const cust=customers.find(x=>x.id==c.dataset.id);return cust?cust.email:'';});
+    if(emails.length){window.location.href='mailto:'+emails.join(',');}
+});
+
+document.getElementById('reportSelected').addEventListener('click',()=>{
+    const selected=[...document.querySelectorAll('.rowCheck:checked')].map(c=>customers.find(x=>x.id==c.dataset.id));
+    const blob=new Blob([JSON.stringify(selected,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='customers_report.json';a.click();URL.revokeObjectURL(url);
+});
+
+document.getElementById('deactivateSelected').addEventListener('click',()=>{
+    document.querySelectorAll('.rowCheck:checked').forEach(c=>{
+        const cust=customers.find(x=>x.id==c.dataset.id);if(cust) cust.status='inactive';});
+    localStorage.setItem('customers',JSON.stringify(customers));applyFilters();
+});
+
+document.getElementById('exportBtn').addEventListener('click',()=>{
+    const data=JSON.stringify(customers,null,2);const blob=new Blob([data],{type:'application/json'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='customers.json';a.click();URL.revokeObjectURL(url);
+});
+
+const importFile=document.getElementById('importFile');
+document.getElementById('importBtn').addEventListener('click',()=>importFile.click());
+importFile.addEventListener('change',e=>{
+    const file=e.target.files[0];if(!file) return;const reader=new FileReader();
+    reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(Array.isArray(data)){data.forEach(d=>{if(!d.id) d.id=Date.now()+Math.random();customers.push(d);});localStorage.setItem('customers',JSON.stringify(customers));applyFilters();}}catch(err){alert('Invalid file');}};reader.readAsText(file);
+});
+
+document.getElementById('addBtn').addEventListener('click',()=>window.location.href='add-customer.html');
+
+document.getElementById('searchInput').addEventListener('input',applyFilters);
+document.getElementById('statusFilter').addEventListener('change',applyFilters);
+document.getElementById('loanFilter').addEventListener('change',applyFilters);
+document.getElementById('dateFilter').addEventListener('change',applyFilters);
+document.getElementById('scoreFilter').addEventListener('change',applyFilters);
+
+function applyFilters(){
+    const q=document.getElementById('searchInput').value.toLowerCase();
+    const status=document.getElementById('statusFilter').value;
+    const loan=document.getElementById('loanFilter').value;
+    const date=document.getElementById('dateFilter').value;
+    const score=document.getElementById('scoreFilter').value;
+    filtered=customers.filter(c=>{
+        if(q && !((c.firstName&&c.firstName.toLowerCase().includes(q))||(c.lastName&&c.lastName.toLowerCase().includes(q))||(c.nationalId&&c.nationalId.includes(q))||(c.phoneNumber&&c.phoneNumber.includes(q)))) return false;
+        if(status && c.status!==status) return false;
+        const info=getLoanInfo(c.id);
+        if(loan==='has' && info.activeCount===0) return false;
+        if(loan==='none' && info.activeCount>0) return false;
+        if(date){
+            const days=parseInt(date);if(Date.now()-parseInt(c.id) > days*24*60*60*1000) return false;
+        }
+        if(score){
+            const sc=parseInt(score);
+            if(sc===750 && c.creditScore<750) return false;
+            if(sc===700 && (c.creditScore<700 || c.creditScore>=750)) return false;
+            if(sc===650 && (c.creditScore<650 || c.creditScore>=700)) return false;
+            if(sc===0 && c.creditScore>=650) return false;
+        }
+        return true;
+    });
+    currentPage=1;render();
+}
+
+function render(){
+    computeStats(customers);
+    customersCount.textContent=`Showing ${filtered.length} of ${customers.length} customers`;
+    const start=(currentPage-1)*PAGE_SIZE;
+    const pageList=filtered.slice(start,start+PAGE_SIZE);
+    renderTable(pageList);
+    renderPagination();
+    updateBulk();
+}
+
+function renderPagination(){
+    const pages=Math.ceil(filtered.length/PAGE_SIZE)||1;
+    pagination.innerHTML='';
+    const prev=document.createElement('button');
+    prev.className='pagination-btn';prev.textContent='\u2190 Previous';prev.disabled=currentPage===1;
+    prev.onclick=()=>{currentPage--;render();};
+    pagination.appendChild(prev);
+    for(let i=1;i<=pages;i++){
+        const b=document.createElement('button');
+        b.className='pagination-btn'+(i===currentPage?' active':'');
+        b.textContent=i;b.onclick=()=>{currentPage=i;render();};
+        pagination.appendChild(b);
+        if(i>=3 && pages>5 && i<pages-1){ if(i===3){const dots=document.createElement('span');dots.textContent='...';dots.style.padding='0 .5rem';pagination.appendChild(dots);} if(i<pages-1) continue; }
+    }
+    const next=document.createElement('button');
+    next.className='pagination-btn';next.textContent='Next \u2192';next.disabled=currentPage===pages;
+    next.onclick=()=>{currentPage++;render();};
+    pagination.appendChild(next);
+}
+
+applyFilters();
 </script>
 </body>
 </html>
