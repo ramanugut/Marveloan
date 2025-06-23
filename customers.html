@@ -215,11 +215,14 @@
         <div class="pagination" id="pagination"></div>
     </div>
 
-<script>
+<script type="module">
+import { db } from './firebase-config.js';
+import { collection, getDocs, doc, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
+
 const PAGE_SIZE = 10;
 
-const customers = JSON.parse(localStorage.getItem('customers')) || [];
-const loans = JSON.parse(localStorage.getItem('loans')) || [];
+let customers = [];
+let loans = [];
 const tbody = document.querySelector('#customersTable tbody');
 const customersCount = document.getElementById('customersCount');
 const statsCards = document.getElementById('statsCards');
@@ -227,12 +230,25 @@ const pagination = document.getElementById('pagination');
 let filtered = [];
 let currentPage = 1;
 
-// ensure extra properties exist
-customers.forEach(c=>{
-    if(!c.status) c.status='active';
-    if(!c.creditScore){ c.creditScore = Math.floor(620+Math.random()*130); }
-});
-localStorage.setItem('customers', JSON.stringify(customers));
+async function loadData(){
+    try{
+        const custSnap = await getDocs(collection(db,'customers'));
+        customers = custSnap.docs.map(d=>d.data());
+        const loanSnap = await getDocs(collection(db,'loans'));
+        loans = loanSnap.docs.map(d=>d.data());
+        customers.forEach(c=>{
+            if(!c.status) c.status='active';
+            if(!c.creditScore) c.creditScore=Math.floor(620+Math.random()*130);
+        });
+        localStorage.setItem('customers', JSON.stringify(customers));
+        localStorage.setItem('loans', JSON.stringify(loans));
+    }catch(err){
+        console.error('Firebase load failed', err);
+        customers = JSON.parse(localStorage.getItem('customers')) || [];
+        loans = JSON.parse(localStorage.getItem('loans')) || [];
+    }
+    applyFilters();
+}
 
 function computeStats(list){
     const total = list.length;
@@ -308,7 +324,12 @@ function deleteCustomer(id){
     const use = loans.some(l=>l.clientId==id);
     if(use){alert('Cannot delete customer with linked transactions');return;}
     const idx=customers.findIndex(c=>c.id==id);
-    if(idx>-1){customers.splice(idx,1);localStorage.setItem('customers',JSON.stringify(customers));applyFilters();}
+    if(idx>-1){
+        customers.splice(idx,1);
+        localStorage.setItem('customers',JSON.stringify(customers));
+        deleteDoc(doc(db,'customers',id.toString())).catch(console.error);
+        applyFilters();
+    }
 
 }
 
@@ -347,8 +368,14 @@ document.getElementById('reportSelected').addEventListener('click',()=>{
 
 document.getElementById('deactivateSelected').addEventListener('click',()=>{
     document.querySelectorAll('.rowCheck:checked').forEach(c=>{
-        const cust=customers.find(x=>x.id==c.dataset.id);if(cust) cust.status='inactive';});
-    localStorage.setItem('customers',JSON.stringify(customers));applyFilters();
+        const cust=customers.find(x=>x.id==c.dataset.id);
+        if(cust){
+            cust.status='inactive';
+            setDoc(doc(db,'customers',cust.id.toString()), cust).catch(console.error);
+        }
+    });
+    localStorage.setItem('customers',JSON.stringify(customers));
+    applyFilters();
 });
 
 document.getElementById('exportBtn').addEventListener('click',()=>{
@@ -360,7 +387,7 @@ const importFile=document.getElementById('importFile');
 document.getElementById('importBtn').addEventListener('click',()=>importFile.click());
 importFile.addEventListener('change',e=>{
     const file=e.target.files[0];if(!file) return;const reader=new FileReader();
-    reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(Array.isArray(data)){data.forEach(d=>{if(!d.id) d.id=Date.now()+Math.random();customers.push(d);});localStorage.setItem('customers',JSON.stringify(customers));applyFilters();}}catch(err){alert('Invalid file');}};reader.readAsText(file);
+    reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(Array.isArray(data)){data.forEach(async d=>{if(!d.id) d.id=Date.now()+Math.random();customers.push(d);await setDoc(doc(db,'customers',d.id.toString()),d);});localStorage.setItem('customers',JSON.stringify(customers));applyFilters();}}catch(err){alert('Invalid file');}};reader.readAsText(file);
 });
 
 document.getElementById('addBtn').addEventListener('click',()=>window.location.href='add-customer.html');
@@ -435,7 +462,7 @@ function toggleStats(){
     arrow.textContent=grid.classList.contains('expanded')?'▲':'▼';
 }
 
-applyFilters();
+loadData();
 </script>
 </body>
 </html>
