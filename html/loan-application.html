@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoanFlow - New Loan Application</title>
+    <link rel="stylesheet" href="../css/loan-application.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><div class="logo-icon">L</div><span>LoanFlow</span></div>
+        <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+        <div class="user-profile">MR</div>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">📋 New Loan Application</h1>
+            <p class="page-subtitle">Process a new loan application quickly and efficiently with our streamlined workflow</p>
+        </div>
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-line"><div class="progress-line-fill"></div></div>
+                <div class="step active"><div class="step-circle">1</div><div class="step-label">Loan Details</div></div>
+                <div class="step pending"><div class="step-circle">2</div><div class="step-label">Customer Info</div></div>
+                <div class="step pending"><div class="step-circle">3</div><div class="step-label">Documentation</div></div>
+                <div class="step pending"><div class="step-circle">4</div><div class="step-label">Review & Submit</div></div>
+            </div>
+        </div>
+        <form id="loanForm" class="form-container">
+            <div class="form-section">
+                <h2 class="section-title">Loan Type Selection</h2>
+                <div class="loan-type-grid">
+                    <div class="loan-type-card selected" data-type="personal" onclick="selectLoanType(this)"><div class="loan-type-icon">🏠</div><div class="loan-type-title">Personal Loan</div><div class="loan-type-desc">Unsecured personal financing</div></div>
+                    <div class="loan-type-card" data-type="home" onclick="selectLoanType(this)"><div class="loan-type-icon">🏡</div><div class="loan-type-title">Home Loan</div><div class="loan-type-desc">Mortgage and home financing</div></div>
+                    <div class="loan-type-card" data-type="auto" onclick="selectLoanType(this)"><div class="loan-type-icon">🚗</div><div class="loan-type-title">Auto Loan</div><div class="loan-type-desc">Vehicle financing options</div></div>
+                    <div class="loan-type-card" data-type="business" onclick="selectLoanType(this)"><div class="loan-type-icon">💼</div><div class="loan-type-title">Business Loan</div><div class="loan-type-desc">Commercial financing solutions</div></div>
+                </div>
+            </div>
+            <div class="form-section">
+                <h2 class="section-title">Loan Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Loan Amount <span class="required">*</span></label>
+                        <input type="number" id="loanAmount" class="form-input" placeholder="Enter loan amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Loan Purpose <span class="required">*</span></label>
+                        <select id="loanPurpose" class="form-select" required>
+                            <option value="">Select purpose</option>
+                            <option value="debt-consolidation">Debt Consolidation</option>
+                            <option value="home-improvement">Home Improvement</option>
+                            <option value="medical">Medical Expenses</option>
+                            <option value="education">Education</option>
+                            <option value="vacation">Vacation</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Loan Term (months) <span class="required">*</span></label>
+                        <select id="loanTerm" class="form-select" required>
+                            <option value="">Select term</option>
+                            <option value="12">12 months</option>
+                            <option value="24">24 months</option>
+                            <option value="36">36 months</option>
+                            <option value="48">48 months</option>
+                            <option value="60">60 months</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Interest Rate (%)</label>
+                        <input type="number" id="interestRate" class="form-input" placeholder="Auto-calculated or manual entry" step="0.01">
+                    </div>
+                </div>
+            </div>
+            <div class="form-section">
+                <h2 class="section-title">Customer Selection</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Select Customer <span class="required">*</span></label>
+                        <select id="customerSelect" class="form-select" required onchange="updateCustomerInfo(this)">
+                            <option value="">Choose existing customer</option>
+                            <option value="customer1">John Smith (ID: 12345)</option>
+                            <option value="customer2">Sarah Johnson (ID: 12346)</option>
+                            <option value="customer3">Michael Brown (ID: 12347)</option>
+                            <option value="new">+ Add New Customer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Customer Status</label>
+                        <input type="text" id="customerStatus" class="form-input" placeholder="Will be populated automatically" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button type="button" class="btn btn-secondary" onclick="saveDraft()">Save as Draft</button>
+                <button type="button" class="btn btn-primary" onclick="submitApplication()">Continue to Customer Info →</button>
+            </div>
+        </form>
+    </div>
+    <script type="module" src="../js/loan-application.js"></script>
+</body>
+</html>

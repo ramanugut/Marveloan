@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marveloan - Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">L</div>
+            <h1>Marveloan</h1>
+        </div>
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search borrowers, loans...">
+        </div>
+        <div class="user-info">
+            <button class="notifications">🔔<span class="notification-badge">3</span></button>
+            <div class="user-avatar">MR</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <nav class="sidebar" id="sidebar">
+            <div class="menu-section">
+                <div class="menu-title">Dashboard</div>
+                <button class="menu-item active" onclick="navigate('dashboard')"><span class="menu-icon">🏠</span>Home</button>
+                <button class="menu-item" onclick="navigate('analytics')"><span class="menu-icon">📊</span>Analytics</button>
+            </div>
+            <div class="menu-section">
+                <div class="menu-title">Customer Management</div>
+                <button class="menu-item" onclick="navigate('customers')"><span class="menu-icon">👥</span>Customers</button>
+                <button class="menu-item" onclick="navigate('employers')"><span class="menu-icon">🏢</span>Employers</button>
+                <button class="menu-item" onclick="navigate('leads')"><span class="menu-icon">🎯</span>Leads</button>
+                <button class="menu-item" onclick="navigate('kyc')"><span class="menu-icon">📋</span>KYC Verification</button>
+            </div>
+            <div class="menu-section">
+                <div class="menu-title">Loan Operations</div>
+                <button class="menu-item" onclick="navigate('applications')"><span class="menu-icon">📝</span>Applications</button>
+                <button class="menu-item" onclick="navigate('underwriting')"><span class="menu-icon">🔍</span>Underwriting</button>
+                <button class="menu-item" onclick="navigate('disbursement')"><span class="menu-icon">💸</span>Disbursement</button>
+                <button class="menu-item" onclick="navigate('collections')"><span class="menu-icon">💰</span>Collections<span class="menu-badge">12</span></button>
+            </div>
+            <div class="menu-section">
+                <div class="menu-title">Financial Management</div>
+                <button class="menu-item" onclick="navigate('cashbook')"><span class="menu-icon">📚</span>Cash Book</button>
+                <button class="menu-item" onclick="navigate('reconciliation')"><span class="menu-icon">⚖️</span>Reconciliation</button>
+                <button class="menu-item" onclick="navigate('reports')"><span class="menu-icon">📈</span>Reports</button>
+            </div>
+            <div class="menu-section">
+                <div class="menu-title">System</div>
+                <button class="menu-item" onclick="navigate('settings')"><span class="menu-icon">⚙️</span>Settings</button>
+                <button class="menu-item" onclick="navigate('help')"><span class="menu-icon">❓</span>Help & Support</button>
+                <button class="menu-item" onclick="logout()"><span class="menu-icon">🚪</span>Log Out</button>
+            </div>
+        </nav>
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        <main class="content">
+            <div class="welcome-section glass">
+                <h2 class="welcome-title">Welcome back, Marven! 👋</h2>
+                <p class="welcome-subtitle">Your loan management system is ready to go.</p>
+            </div>
+            <div class="stats-toggle" onclick="toggleStats()">
+                <span>📊 View Statistics</span>
+                <span id="stats-arrow">▼</span>
+            </div>
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card glass">
+                    <div class="stat-number">247</div>
+                    <div class="stat-label">Active Loans</div>
+                </div>
+                <div class="stat-card glass">
+                    <div class="stat-number">R2.8M</div>
+                    <div class="stat-label">Outstanding</div>
+                </div>
+                <div class="stat-card glass">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Applications</div>
+                </div>
+                <div class="stat-card glass">
+                    <div class="stat-number">R450K</div>
+                    <div class="stat-label">Today's Collections</div>
+                </div>
+            </div>
+            <div class="quick-actions">
+                <div class="action-card blue glass" onclick="navigate('add-customer')">
+                    <div class="action-icon">👤</div>
+                    <h3 class="action-title">Add New Customer</h3>
+                    <p class="action-description">Create a new customer profile and start their journey</p>
+                    <button class="action-button">Create Customer</button>
+                </div>
+                <div class="action-card purple glass" onclick="navigate('new-application')">
+                    <div class="action-icon">📝</div>
+                    <h3 class="action-title">New Loan Application</h3>
+                    <p class="action-description">Process a new loan application quickly and efficiently</p>
+                    <button class="action-button">Start Application</button>
+                </div>
+                <div class="action-card green glass" onclick="navigate('disbursement')">
+                    <div class="action-icon">💸</div>
+                    <h3 class="action-title">Loan Disbursement</h3>
+                    <p class="action-description">Disburse approved loans to customers</p>
+                    <button class="action-button">Disburse Loans</button>
+                </div>
+                <div class="action-card orange glass" onclick="navigate('collections')">
+                    <div class="action-icon">💰</div>
+                    <h3 class="action-title">Collections</h3>
+                    <p class="action-description">Manage loan repayments and collection activities</p>
+                    <button class="action-button">Manage Collections</button>
+                </div>
+                <div class="action-card pink glass" onclick="navigate('reports')">
+                    <div class="action-icon">📊</div>
+                    <h3 class="action-title">Generate Reports</h3>
+                    <p class="action-description">Create detailed reports and analytics</p>
+                    <button class="action-button">View Reports</button>
+                </div>
+                <div class="action-card teal glass" onclick="navigate('reconciliation')">
+                    <div class="action-icon">⚖️</div>
+                    <h3 class="action-title">Reconciliation</h3>
+                    <p class="action-description">Reconcile accounts and transactions</p>
+                    <button class="action-button">Start Reconciliation</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="../js/dashboard.js"></script>
+</body>
+</html>

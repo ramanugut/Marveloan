@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoanFlow - Loan Disbursement</title>
+    <link rel="stylesheet" href="../css/loan-disbursement.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">L</div>
+            <span>LoanFlow</span>
+        </div>
+        <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+        <div class="user-profile">MR</div>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">💰 Loan Disbursement</h1>
+            <p class="page-subtitle">Disburse approved loans to customers efficiently and track all payment activities</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-value" id="countApproved">0</div>
+                <div class="stat-label">Approved Loans</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💸</div>
+                <div class="stat-value" id="pendingAmount">$0</div>
+                <div class="stat-label">Pending Disbursement</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="disbursedToday">0</div>
+                <div class="stat-label">Disbursed Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="totalDisbursed">$0</div>
+                <div class="stat-label">Total Disbursed</div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="loans-section">
+                <div class="section-header">
+                    <h2 class="section-title">Approved Loans</h2>
+                </div>
+                <div class="filters">
+                    <button class="filter-btn active" onclick="filterLoans('all')">All Loans</button>
+                    <button class="filter-btn" onclick="filterLoans('approved')">Ready to Disburse</button>
+                    <button class="filter-btn" onclick="filterLoans('pending')">Pending Review</button>
+                    <button class="filter-btn" onclick="filterLoans('high-amount')">High Amount</button>
+                </div>
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search by customer name, loan ID, or amount..." onkeyup="searchLoans(this.value)">
+                </div>
+                <div class="loan-list" id="loanList"></div>
+            </div>
+            <div class="disbursement-panel">
+                <h3 class="panel-title">💸 Disbursement Panel</h3>
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">👆</div>
+                    <div class="empty-text">Select a loan from the list to proceed with disbursement</div>
+                </div>
+                <div class="selected-loan-info" id="selectedLoanInfo">
+                    <h4 style="margin-bottom: 15px;">Selected Loan</h4>
+                    <div id="loanSummary"></div>
+                </div>
+                <div class="disbursement-form" id="disbursementForm">
+                    <div class="amount-display">
+                        <div class="amount-value" id="disbursementAmount">$0</div>
+                        <div class="amount-label">Disbursement Amount</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Disbursement Method <span class="required">*</span></label>
+                        <select class="form-select" id="methodSelect" required>
+                            <option value="">Select method</option>
+                            <option value="bank-transfer">Bank Transfer</option>
+                            <option value="check">Check</option>
+                            <option value="cash">Cash</option>
+                            <option value="mobile-money">Mobile Money</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bank Account Details</label>
+                        <input type="text" class="form-input" id="accountInput" placeholder="Account number (auto-filled from customer profile)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bank Name</label>
+                        <input type="text" class="form-input" id="bankInput" placeholder="Bank name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reference Number</label>
+                        <input type="text" class="form-input" id="refInput" placeholder="Transaction reference (optional)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Disbursement Date</label>
+                        <input type="date" class="form-input" id="dateInput" value="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-input" id="notesInput" rows="3" placeholder="Additional notes or instructions..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="processDisbursement()">💸 Process Disbursement</button>
+                    <button class="btn btn-secondary" onclick="schedulePayment()">📅 Schedule Payment</button>
+                    <button class="btn btn-danger" onclick="cancelDisbursement()">❌ Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="../js/loan-disbursement.js"></script>
+</body>
+</html>
