@@ -43,7 +43,9 @@
         <tbody></tbody>
     </table>
 </div>
-<script>
+<script type="module">
+import { db } from './firebase-config.js';
+import { collection, doc, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
 const customers = JSON.parse(localStorage.getItem('customers')) || [];
 const loans = JSON.parse(localStorage.getItem('loans')) || [];
 const tbody = document.querySelector('#customersTable tbody');
@@ -64,13 +66,18 @@ function render(list){
         tbody.appendChild(tr);
     });
 }
-function deleteCustomer(id){
+async function deleteCustomer(id){
     const inUse = loans.some(l=>l.clientId===id);
     if(inUse){alert('Cannot delete customer with linked transactions');return;}
     if(confirm('Delete this customer?')){
         let list=JSON.parse(localStorage.getItem('customers'))||[];
         list=list.filter(c=>c.id!==id);
         localStorage.setItem('customers',JSON.stringify(list));
+        try{
+            await deleteDoc(doc(collection(db,'customers'), id.toString()));
+        }catch(err){
+            console.error('Firebase delete failed', err);
+        }
         render(list);
     }
 }

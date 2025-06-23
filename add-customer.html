@@ -303,7 +303,9 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js';
         let currentStep = 1;
         const totalSteps = 3;
 
@@ -375,7 +377,7 @@
             }
         }
 
-        form.addEventListener('submit',function(e){
+        form.addEventListener('submit',async function(e){
             e.preventDefault();
             if(validateCurrentStep()){
                 const data={};
@@ -392,13 +394,24 @@
                 localStorage.setItem('customers', JSON.stringify(customers));
 
                 let employers=JSON.parse(localStorage.getItem('employers'))||[];
+                let employerDoc=null;
                 if(data.employerName){
                     let emp=employers.find(e=>e.name.toLowerCase()==data.employerName.toLowerCase());
                     if(!emp){
                         emp={name:data.employerName,code:data.employerCode||generateCode(data.employerName)};
                         employers.push(emp);
                     }
+                    employerDoc=emp;
                     localStorage.setItem('employers',JSON.stringify(employers));
+                }
+
+                try{
+                    await setDoc(doc(collection(db,'customers'), data.id.toString()), data);
+                    if(employerDoc){
+                        await setDoc(doc(collection(db,'employers'), employerDoc.code), employerDoc);
+                    }
+                }catch(err){
+                    console.error('Firebase save failed', err);
                 }
 
                 setTimeout(()=>{currentStep=4;updateSteps();},500);
@@ -413,6 +426,10 @@
             window.location.href='customer-profile.html';
         }
         updateSteps();
+        window.nextStep = nextStep;
+        window.previousStep = previousStep;
+        window.addAnother = addAnother;
+        window.viewCustomer = viewCustomer;
     </script>
 </body>
 </html>
