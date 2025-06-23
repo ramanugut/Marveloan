@@ -258,7 +258,7 @@ function showActionsMenu(id,btn){
     menu.style.padding='.5rem';
     menu.style.borderRadius='.5rem';
     menu.style.zIndex=100;
-    menu.innerHTML = `<div style="cursor:pointer;padding:.25rem 0;" data-act="edit">Edit</div><div style="cursor:pointer;padding:.25rem 0;" data-act="delete">Delete</div>`;
+    menu.innerHTML = `<div style="cursor:pointer;padding:.25rem 0;" data-act="view">View Profile</div><div style="cursor:pointer;padding:.25rem 0;" data-act="edit">Edit</div><div style="cursor:pointer;padding:.25rem 0;" data-act="delete">Delete</div>`;
     document.body.appendChild(menu);
     const rect=btn.getBoundingClientRect();
     menu.style.left=rect.left+'px';
@@ -267,8 +267,10 @@ function showActionsMenu(id,btn){
     document.addEventListener('click',remove);
     menu.addEventListener('click',e=>{
         const act=e.target.getAttribute('data-act');
+        if(act==='view'){viewCustomer(id);}
         if(act==='edit'){window.location.href=`add-customer.html?id=${id}`;}
-        if(act==='delete'){deleteCustomer(id);}remove();
+        if(act==='delete'){deleteCustomer(id);}
+        remove();
     });
 }
 
