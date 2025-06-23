@@ -571,6 +571,11 @@
                 return;
             }
 
+            if (page === 'reports') {
+                window.location.href = 'generate-reports.html';
+                return;
+            }
+
             const welcomeTitle = document.querySelector('.welcome-title');
             const welcomeSubtitle = document.querySelector('.welcome-subtitle');
             const config = {
