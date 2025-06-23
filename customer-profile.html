@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoanFlow - Customer Profile</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+            background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);
+            min-height:100vh;
+            color:#1a202c;
+        }
+        .header{
+            background:rgba(255,255,255,0.15);
+            backdrop-filter:blur(25px);
+            border-bottom:1px solid rgba(255,255,255,0.18);
+            padding:0.75rem 1.5rem;
+            display:flex;justify-content:space-between;align-items:center;
+            position:sticky;top:0;z-index:100;
+        }
+        .logo{display:flex;align-items:center;gap:0.75rem;}
+        .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#fff;font-weight:bold;}
+        .logo h1{background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:1.5rem;font-weight:700;}
+        .back-button{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:0.5rem 1rem;cursor:pointer;text-decoration:none;font-size:0.9rem;display:flex;align-items:center;gap:0.5rem;}
+        .back-button:hover{background:rgba(255,255,255,0.2);}
+        .main-container{max-width:1200px;margin:2rem auto;padding:1rem;}
+        .profile-card{background:rgba(255,255,255,0.12);backdrop-filter:blur(20px);border-radius:16px;padding:2rem;box-shadow:0 8px 32px rgba(0,0,0,0.1);border:1px solid rgba(255,255,255,0.2);color:white;}
+        .profile-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+        .avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:white;}
+        .profile-name{font-size:1.5rem;font-weight:700;}
+        .section{margin-bottom:1.5rem;}
+        .section h3{font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;}
+        .section p{margin-bottom:0.25rem;}
+        .actions{margin-top:1.5rem;display:flex;gap:1rem;}
+        .btn{padding:0.75rem 1.5rem;border-radius:8px;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease;border:none;color:white;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;}
+        .btn-primary{background:linear-gradient(135deg,#4299e1,#63b3ed);}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(66,153,225,0.4);}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">L</div>
+            <h1>LoanFlow</h1>
+        </div>
+        <a href="dashboard.html" class="back-button">← Back to Dashboard</a>
+    </header>
+
+    <div class="main-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="avatar" id="avatar">CU</div>
+                <div class="profile-name" id="fullName">Customer Name</div>
+            </div>
+            <div class="section">
+                <h3>Personal Details</h3>
+                <p><strong>ID:</strong> <span id="nationalId"></span></p>
+                <p><strong>DOB:</strong> <span id="dob"></span></p>
+                <p><strong>Gender:</strong> <span id="gender"></span></p>
+            </div>
+            <div class="section">
+                <h3>Contact</h3>
+                <p><strong>Phone:</strong> <span id="phone"></span></p>
+                <p><strong>Email:</strong> <span id="email"></span></p>
+                <p><strong>Address:</strong> <span id="address"></span></p>
+            </div>
+            <div class="section">
+                <h3>Financial Info</h3>
+                <p><strong>Employment:</strong> <span id="employment"></span></p>
+                <p><strong>Income:</strong> <span id="income"></span></p>
+                <p><strong>Bank:</strong> <span id="bank"></span> - <span id="account"></span></p>
+            </div>
+            <div class="actions">
+                <a href="new-loan.html" class="btn btn-primary">+ New Loan Application</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const customer = JSON.parse(localStorage.getItem('recentCustomer')) || {};
+        if(Object.keys(customer).length){
+            document.getElementById('fullName').textContent = `${customer.firstName || ''} ${customer.lastName || ''}`.trim();
+            document.getElementById('avatar').textContent = (customer.firstName?customer.firstName[0]:'C') + (customer.lastName?customer.lastName[0]:'U');
+            document.getElementById('nationalId').textContent = customer.nationalId || '';
+            document.getElementById('dob').textContent = customer.dateOfBirth || '';
+            document.getElementById('gender').textContent = customer.gender || '';
+            document.getElementById('phone').textContent = customer.phoneNumber || '';
+            document.getElementById('email').textContent = customer.email || '';
+            document.getElementById('address').textContent = customer.homeAddress || '';
+            document.getElementById('employment').textContent = customer.employmentStatus || '';
+            document.getElementById('income').textContent = customer.monthlyIncome ? 'R ' + customer.monthlyIncome : '';
+            document.getElementById('bank').textContent = customer.bankName || '';
+            document.getElementById('account').textContent = customer.accountNumber || '';
+        }
+    </script>
+</body>
+</html>

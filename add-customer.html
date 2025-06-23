@@ -346,9 +346,13 @@
             document.getElementById('submitBtn').style.display=currentStep===totalSteps?'inline-flex':'none';
             document.getElementById('formActions').style.display=currentStep===4?'none':'flex';
         }
-        document.getElementById('customerForm').addEventListener('submit',function(e){
+        const form=document.getElementById('customerForm');
+        form.addEventListener('submit',function(e){
             e.preventDefault();
             if(validateCurrentStep()){
+                const data={};
+                new FormData(form).forEach((v,k)=>data[k]=v);
+                localStorage.setItem('recentCustomer',JSON.stringify(data));
                 setTimeout(()=>{
                     currentStep=4;
                     updateSteps();
@@ -361,7 +365,7 @@
             updateSteps();
         }
         function viewCustomer(){
-            alert('Customer profile page would open here.');
+            window.location.href='customer-profile.html';
         }
         updateSteps();
     </script>
