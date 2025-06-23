@@ -3,13 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoanFlow - New Loan</title>
+    <title>LoanFlow - New Loan Application</title>
     <style>
-        body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);color:white;display:flex;align-items:center;justify-content:center;min-height:100vh;}
-        h1{font-size:2rem;background:rgba(0,0,0,0.2);padding:2rem;border-radius:12px;backdrop-filter:blur(10px);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+            background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);
+            min-height:100vh;
+            color:#fff;
+        }
+        .header{
+            background:rgba(255,255,255,0.15);
+            backdrop-filter:blur(20px);
+            padding:0.75rem 1.5rem;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            position:sticky;top:0;z-index:10;
+        }
+        .back{color:white;text-decoration:none;font-size:0.9rem;}
+        .container{max-width:900px;margin:2rem auto;padding:2rem;background:rgba(255,255,255,0.12);backdrop-filter:blur(20px);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.1);}
+        h1{font-size:1.5rem;margin-bottom:1.5rem;}
+        .step{display:none;}
+        .step.active{display:block;animation:fadeIn 0.4s ease-out;}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+        .form-group{margin-bottom:1rem;}
+        label{display:block;margin-bottom:0.3rem;color:#f7fafc;font-size:0.9rem;}
+        input,select{
+            width:100%;padding:0.6rem;border-radius:6px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:white;outline:none;
+        }
+        input:focus,select:focus{border-color:#4299e1;background:rgba(255,255,255,0.2);}
+        ul.results{list-style:none;margin-top:1rem;max-height:200px;overflow-y:auto;padding:0;}
+        ul.results li{padding:0.5rem;border-bottom:1px solid rgba(255,255,255,0.1);cursor:pointer;}
+        ul.results li:hover{background:rgba(255,255,255,0.1);}
+        .actions{text-align:right;margin-top:1.5rem;display:flex;justify-content:space-between;}
+        button{padding:0.6rem 1.2rem;border:none;border-radius:6px;cursor:pointer;font-weight:600;}
+        .btn-primary{background:linear-gradient(135deg,#4299e1,#63b3ed);color:white;}
+        .btn-secondary{background:rgba(255,255,255,0.2);color:white;}
+        .summary{background:rgba(0,0,0,0.2);padding:1rem;border-radius:8px;}
     </style>
 </head>
 <body>
-    <h1>New Loan Application - Coming Soon</h1>
+    <div class="header">
+        <a href="dashboard.html" class="back">&larr; Back to Dashboard</a>
+    </div>
+    <div class="container">
+        <h1>New Loan Application</h1>
+        <form id="loanForm">
+            <div class="step active" id="step1">
+                <div class="form-group">
+                    <label for="search">Search Client</label>
+                    <input type="text" id="search" placeholder="Enter name or ID">
+                </div>
+                <ul class="results" id="results"></ul>
+            </div>
+            <div class="step" id="step2">
+                <p><strong>Client:</strong> <span id="clientName"></span></p>
+                <div class="form-group">
+                    <label for="product">Loan Product</label>
+                    <select id="product">
+                        <option value="short" data-rate="0.05" data-term="1">Short Term (1 month @5%/mo)</option>
+                        <option value="personal" data-rate="0.03" data-term="6">Personal Loan (6 months @3%/mo)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Loan Amount</label>
+                    <input type="number" id="amount" min="100" step="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="term">Term (months)</label>
+                    <select id="term"></select>
+                </div>
+                <div class="form-group">
+                    <label>Estimated Monthly Installment</label>
+                    <div id="installment">R0</div>
+                </div>
+            </div>
+            <div class="step" id="step3">
+                <div class="summary" id="review"></div>
+            </div>
+            <div class="actions">
+                <button type="button" class="btn-secondary" id="prevBtn">Previous</button>
+                <div>
+                    <button type="button" class="btn-secondary" id="nextBtn">Next</button>
+                    <button type="submit" class="btn-primary" id="submitBtn" style="display:none">Create Loan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+<script>
+const customers = JSON.parse(localStorage.getItem('customers')) || [];
+let currentStep = 1;
+let selectedCustomer = null;
+const resultsList = document.getElementById('results');
+const searchInput = document.getElementById('search');
+function renderResults(list){
+    resultsList.innerHTML = '';
+    list.forEach(c => {
+        const li = document.createElement('li');
+        li.textContent = `${c.firstName} ${c.lastName} - ${c.nationalId}`;
+        li.onclick = ()=>selectCustomer(c.id);
+        resultsList.appendChild(li);
+    });
+    if(list.length===0){
+        resultsList.innerHTML = '<li>No matches</li>';
+    }
+}
+searchInput.addEventListener('input',()=>{
+    const q = searchInput.value.toLowerCase();
+    const filtered = customers.filter(c =>
+        (c.firstName && c.firstName.toLowerCase().includes(q)) ||
+        (c.lastName && c.lastName.toLowerCase().includes(q)) ||
+        (c.nationalId && c.nationalId.includes(q))
+    );
+    if(q){renderResults(filtered);}else{resultsList.innerHTML='';}
+});
+function selectCustomer(id){
+    selectedCustomer = customers.find(c=>c.id===id);
+    document.getElementById('clientName').textContent = `${selectedCustomer.firstName} ${selectedCustomer.lastName}`;
+    nextStep();
+}
+function updateTermOptions(){
+    const product = document.getElementById('product');
+    const termSelect = document.getElementById('term');
+    const defaultTerm = parseInt(product.options[product.selectedIndex].dataset.term);
+    termSelect.innerHTML = '';
+    for(let i=1;i<=defaultTerm;i++){
+        const opt=document.createElement('option');
+        opt.value=i;opt.textContent=i;
+        termSelect.appendChild(opt);
+    }
+    termSelect.value=defaultTerm;
+    calculateInstallment();
+}
+function calculateInstallment(){
+    const product = document.getElementById('product');
+    const rate = parseFloat(product.options[product.selectedIndex].dataset.rate);
+    const amount = parseFloat(document.getElementById('amount').value)||0;
+    const term = parseInt(document.getElementById('term').value)||1;
+    const total = amount*(1 + rate*term);
+    const installment = total/term;
+    document.getElementById('installment').textContent = `R${installment.toFixed(2)}`;
+}
+
+document.getElementById('product').addEventListener('change',updateTermOptions);
+document.getElementById('amount').addEventListener('input',calculateInstallment);
+document.getElementById('term').addEventListener('change',calculateInstallment);
+
+function nextStep(){
+    if(currentStep===1 && !selectedCustomer) return;
+    document.getElementById(`step${currentStep}`).classList.remove('active');
+    currentStep++;
+    if(currentStep>3) currentStep=3;
+    document.getElementById(`step${currentStep}`).classList.add('active');
+    document.getElementById('prevBtn').style.display=currentStep===1?'none':'inline-block';
+    document.getElementById('nextBtn').style.display=currentStep===3?'none':'inline-block';
+    document.getElementById('submitBtn').style.display=currentStep===3?'inline-block':'none';
+    if(currentStep===2){updateTermOptions();}
+    if(currentStep===3){populateReview();}
+}
+function prevStep(){
+    document.getElementById(`step${currentStep}`).classList.remove('active');
+    currentStep--;
+    if(currentStep<1) currentStep=1;
+    document.getElementById(`step${currentStep}`).classList.add('active');
+    document.getElementById('prevBtn').style.display=currentStep===1?'none':'inline-block';
+    document.getElementById('nextBtn').style.display=currentStep===3?'none':'inline-block';
+    document.getElementById('submitBtn').style.display=currentStep===3?'inline-block':'none';
+}
+function populateReview(){
+    const amount = parseFloat(document.getElementById('amount').value)||0;
+    const term = parseInt(document.getElementById('term').value)||1;
+    const productSel = document.getElementById('product');
+    const rate = parseFloat(productSel.options[productSel.selectedIndex].dataset.rate);
+    const total = amount*(1 + rate*term);
+    const installment = total/term;
+    const html = `<p><strong>Client:</strong> ${selectedCustomer.firstName} ${selectedCustomer.lastName}</p>
+    <p><strong>Product:</strong> ${productSel.options[productSel.selectedIndex].text}</p>
+    <p><strong>Amount:</strong> R${amount.toFixed(2)}</p>
+    <p><strong>Term:</strong> ${term} month(s)</p>
+    <p><strong>Monthly Installment:</strong> R${installment.toFixed(2)}</p>`;
+    document.getElementById('review').innerHTML = html;
+}
+
+document.getElementById('nextBtn').addEventListener('click',nextStep);
+document.getElementById('prevBtn').addEventListener('click',prevStep);
+
+document.getElementById('loanForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    const productSel = document.getElementById('product');
+    const rate = parseFloat(productSel.options[productSel.selectedIndex].dataset.rate);
+    const amount = parseFloat(document.getElementById('amount').value)||0;
+    const term = parseInt(document.getElementById('term').value)||1;
+    const total = amount*(1 + rate*term);
+    const installment = total/term;
+    const loan = {
+        id: Date.now(),
+        clientId: selectedCustomer.id,
+        product: productSel.value,
+        amount,
+        term,
+        rate,
+        installment: parseFloat(installment.toFixed(2)),
+        status:'Application'
+    };
+    const loans = JSON.parse(localStorage.getItem('loans')) || [];
+    loans.push(loan);
+    localStorage.setItem('loans', JSON.stringify(loans));
+    alert('Loan application created!');
+    window.location.href='dashboard.html';
+});
+</script>
 </body>
 </html>

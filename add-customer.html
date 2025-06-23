@@ -352,7 +352,11 @@
             if(validateCurrentStep()){
                 const data={};
                 new FormData(form).forEach((v,k)=>data[k]=v);
-                localStorage.setItem('recentCustomer',JSON.stringify(data));
+                data.id = Date.now();
+                localStorage.setItem('recentCustomer', JSON.stringify(data));
+                const customers = JSON.parse(localStorage.getItem('customers')) || [];
+                customers.push(data);
+                localStorage.setItem('customers', JSON.stringify(customers));
                 setTimeout(()=>{
                     currentStep=4;
                     updateSteps();
