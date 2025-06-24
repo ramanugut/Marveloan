@@ -2405,3 +2405,13 @@
 .menu-action{cursor:pointer;padding:.25rem 0;}
 .text-white{color:#fff;}
 .underline{text-decoration:underline;}
+
+/* Dashboard animations and scrollbar styling */
+.content > *{animation:fadeInUp 0.6s ease-out forwards;}
+.content > *:nth-child(1){animation-delay:0.1s;}
+.content > *:nth-child(2){animation-delay:0.2s;}
+.content > *:nth-child(3){animation-delay:0.3s;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:rgba(255,255,255,0.1);border-radius:3px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.3);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.5);}
