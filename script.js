@@ -1,3 +1,4 @@
+
 import { auth } from "./firebase-config.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
@@ -87,6 +88,7 @@ function toggleMobileMenu() {
 function logout() {
     alert('Logging out...');
 }
+
 
 function initLoginPage() {
     const togglePassword = document.getElementById('togglePassword');
@@ -239,3 +241,4 @@ window.navigate = navigate;
 window.toggleStats = toggleStats;
 window.toggleMobileMenu = toggleMobileMenu;
 window.logout = logout;
+
