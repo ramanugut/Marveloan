@@ -1,4 +1,4 @@
-# Marveloan
+# LoanFlow
 
 This project contains a set of demo HTML pages for a loan management
 system interface. Users can register via `signup.html` and then log in
