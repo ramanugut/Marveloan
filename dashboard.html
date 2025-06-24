@@ -1,135 +1,299 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoanFlow - Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header class="header">
-        <div class="logo">
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnPro - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="bg-animation">
+  <div id="aurora">
+  <div class="aurora__item"></div>
+  <div class="aurora__item"></div>
+  <div class="aurora__item"></div>
+  <div class="aurora__item"></div>
+  </div>
+  </div>
+ 
 
-            <div class="logo-icon">M</div>
-            <h1>Marveloan</h1>
+  <header class="header glass">
+  <div class="logo">
+  <i class="fa fa-graduation-cap logo-icon"></i>
+  <h1>LearnPro</h1>
+  </div>
+ 
 
-        </div>
-        <div class="search-bar">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Search borrowers, loans...">
-        </div>
-        <div class="user-info">
-            <button class="notifications">🔔<span class="notification-badge">3</span></button>
-            <div class="user-avatar">MR</div>
-        </div>
-    </header>
+  <div class="search-bar">
+  <i class="fas fa-search search-icon"></i>
+  <input type="text" placeholder="Search courses, users...">
+  </div>
+ 
 
-    <div class="main-container dashboard-layout">
-        <nav class="sidebar" id="sidebar">
-            <div class="menu-section">
-                <div class="menu-title">Dashboard</div>
-                <button class="menu-item active" onclick="navigate('dashboard')"><span class="menu-icon">🏠</span>Home</button>
-                <button class="menu-item" onclick="navigate('analytics')"><span class="menu-icon">📊</span>Analytics</button>
-            </div>
-            <div class="menu-section">
-                <div class="menu-title">Customer Management</div>
-                <button class="menu-item" onclick="navigate('customers')"><span class="menu-icon">👥</span>Customers</button>
-                <button class="menu-item" onclick="navigate('employers')"><span class="menu-icon">🏢</span>Employers</button>
-                <button class="menu-item" onclick="navigate('leads')"><span class="menu-icon">🎯</span>Leads</button>
-                <button class="menu-item" onclick="navigate('kyc')"><span class="menu-icon">📋</span>KYC Verification</button>
-            </div>
-            <div class="menu-section">
-                <div class="menu-title">Loan Operations</div>
-                <button class="menu-item" onclick="navigate('applications')"><span class="menu-icon">📝</span>Applications</button>
-                <button class="menu-item" onclick="navigate('underwriting')"><span class="menu-icon">🔍</span>Underwriting</button>
-                <button class="menu-item" onclick="navigate('disbursement')"><span class="menu-icon">💸</span>Disbursement</button>
-                <button class="menu-item" onclick="navigate('collections')"><span class="menu-icon">💰</span>Collections<span class="menu-badge">12</span></button>
-            </div>
-            <div class="menu-section">
-                <div class="menu-title">Financial Management</div>
-                <button class="menu-item" onclick="navigate('cashbook')"><span class="menu-icon">📚</span>Cash Book</button>
-                <button class="menu-item" onclick="navigate('reconciliation')"><span class="menu-icon">⚖️</span>Reconciliation</button>
-                <button class="menu-item" onclick="navigate('reports')"><span class="menu-icon">📈</span>Reports</button>
-            </div>
-            <div class="menu-section">
-                <div class="menu-title">System</div>
-                <button class="menu-item" onclick="navigate('settings')"><span class="menu-icon">⚙️</span>Settings</button>
-                <button class="menu-item" onclick="navigate('help')"><span class="menu-icon">❓</span>Help & Support</button>
-                <button class="menu-item" onclick="logout()"><span class="menu-icon">🚪</span>Log Out</button>
-            </div>
-        </nav>
-        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
-        <main class="content">
-            <div class="welcome-section glass">
-                <h2 class="welcome-title">Welcome back, Marven! 👋</h2>
-                <p class="welcome-subtitle">Your loan management system is ready to go.</p>
-            </div>
-            <div class="stats-toggle" onclick="toggleStats()">
-                <span>📊 View Statistics</span>
-                <span id="stats-arrow">▼</span>
-            </div>
-            <div class="stats-grid" id="stats-grid">
-                <div class="stat-card glass">
-                    <div class="stat-number">247</div>
-                    <div class="stat-label">Active Loans</div>
-                </div>
-                <div class="stat-card glass">
-                    <div class="stat-number">R2.8M</div>
-                    <div class="stat-label">Outstanding</div>
-                </div>
-                <div class="stat-card glass">
-                    <div class="stat-number">15</div>
-                    <div class="stat-label">Applications</div>
-                </div>
-                <div class="stat-card glass">
-                    <div class="stat-number">R450K</div>
-                    <div class="stat-label">Today's Collections</div>
-                </div>
-            </div>
-            <div class="quick-actions">
-                <div class="action-card blue glass" onclick="navigate('add-customer')">
-                    <div class="action-icon">👤</div>
-                    <h3 class="action-title">Add New Customer</h3>
-                    <p class="action-description">Create a new customer profile and start their journey</p>
-                    <button class="action-button">Create Customer</button>
-                </div>
-                <div class="action-card purple glass" onclick="navigate('new-application')">
-                    <div class="action-icon">📝</div>
-                    <h3 class="action-title">New Loan Application</h3>
-                    <p class="action-description">Process a new loan application quickly and efficiently</p>
-                    <button class="action-button">Start Application</button>
-                </div>
-                <div class="action-card green glass" onclick="navigate('disbursement')">
-                    <div class="action-icon">💸</div>
-                    <h3 class="action-title">Loan Disbursement</h3>
-                    <p class="action-description">Disburse approved loans to customers</p>
-                    <button class="action-button">Disburse Loans</button>
-                </div>
-                <div class="action-card orange glass" onclick="navigate('collections')">
-                    <div class="action-icon">💰</div>
-                    <h3 class="action-title">Collections</h3>
-                    <p class="action-description">Manage loan repayments and collection activities</p>
-                    <button class="action-button">Manage Collections</button>
-                </div>
-                <div class="action-card pink glass" onclick="navigate('reports')">
-                    <div class="action-icon">📊</div>
-                    <h3 class="action-title">Generate Reports</h3>
-                    <p class="action-description">Create detailed reports and analytics</p>
-                    <button class="action-button">View Reports</button>
-                </div>
-                <div class="action-card teal glass" onclick="navigate('reconciliation')">
-                    <div class="action-icon">⚖️</div>
-                    <h3 class="action-title">Reconciliation</h3>
-                    <p class="action-description">Reconcile accounts and transactions</p>
-                    <button class="action-button">Start Reconciliation</button>
-                </div>
-            </div>
-        </main>
-    </div>
+  <div class="user-info">
+  <button class="notifications glass">
+  <i class="fas fa-bell"></i>
+  <span class="notification-badge">5</span>
+  </button>
+  <div class="user-avatar glass" onclick="showUserMenu()">
+  <i class="fas fa-user"></i>
+  </div>
+  </div>
+  </header>
+ 
 
+  <div class="main-container">
+  <nav class="sidebar glass" id="sidebar">
+  <div class="menu-section">
+  <div class="menu-title">Navigation</div>
+  <button class="menu-item active" onclick="navigate('home')">
+  <i class="fas fa-home menu-icon"></i>
+  <span class="menu-text">Home</span>
+  </button>
+  <button class="menu-item" onclick="navigate('courses')">
+  <i class="fas fa-book-open menu-icon"></i>
+  <span class="menu-text">Courses</span>
+  </button>
+  <button class="menu-item" onclick="navigate('students')">
+  <i class="fas fa-users menu-icon"></i>
+  <span class="menu-text">Students</span>
+  </button>
+  <button class="menu-item" onclick="navigate('instructors')">
+  <i class="fas fa-chalkboard-teacher menu-icon"></i>
+  <span class="menu-text">Instructors</span>
+  </button>
+  </div>
+ 
 
+  <div class="menu-section">
+  <div class="menu-title">Management</div>
+  <button class="menu-item" onclick="navigate('assignments')">
+  <i class="fas fa-tasks menu-icon"></i>
+  <span class="menu-text">Assignments</span>
+  <span class="menu-badge">3</span>
+  </button>
+  <button class="menu-item" onclick="navigate('quizzes')">
+  <i class="fas fa-question-circle menu-icon"></i>
+  <span class="menu-text">Quizzes</span>
+  </button>
+  <button class="menu-item" onclick="navigate('grades')">
+  <i class="fas fa-clipboard-check menu-icon"></i>
+  <span class="menu-text">Grades</span>
+  </button>
+  </div>
+ 
 
-    <script type="module" src="script.js"></script>
+  <div class="menu-section">
+  <div class="menu-title">Settings</div>
+  <button class="menu-item" onclick="navigate('profile')">
+  <i class="fas fa-user-cog menu-icon"></i>
+  <span class="menu-text">Profile</span>
+  </button>
+  <button class="menu-item" onclick="navigate('notifications-settings')">
+  <i class="fas fa-sliders-h menu-icon"></i>
+  <span class="menu-text">Notifications</span>
+  </button>
+  <button class="menu-item" onclick="logout()">
+  <i class="fas fa-sign-out-alt menu-icon"></i>
+  <span class="menu-text">Logout</span>
+  </button>
+  </div>
+  </nav>
+ 
 
-</body>
-</html>
+  <button class="mobile-menu-toggle glass" onclick="toggleMobileMenu()">
+  <i class="fas fa-bars"></i>
+  </button>
+ 
+
+  <main class="content">
+  <section class="welcome-section glass">
+  <h2 class="welcome-title">Welcome back, Alex!</h2>
+  <p class="welcome-subtitle">Your learning journey awaits.</p>
+  <div class="quick-access">
+  <button class="quick-access-item glass"><i class="fas fa-play-circle"></i> Continue Learning</button>
+  <button class="quick-access-item glass"><i class="fas fa-calendar-alt"></i> Today's Schedule</button>
+  <button class="quick-access-item glass"><i class="fas fa-envelope"></i> New Messages</button>
+  </div>
+  </section>
+ 
+
+  <div class="dashboard-widgets">
+  <div class="widget glass widget-active-courses">
+  <div class="widget-header">
+  <h3><i class="fas fa-fire"></i> Active Courses</h3>
+  <button class="widget-options"><i class="fas fa-ellipsis-h"></i></button>
+  </div>
+  <div class="widget-content">
+  <ul class="course-list">
+  <li class="course-item">
+  <div class="course-info">
+  <h4>Advanced Web Development</h4>
+  <p>80% Complete</p>
+  </div>
+  <div class="progress-bar">
+  <div class="progress" style="width: 80%;"></div>
+  </div>
+  </li>
+  <li class="course-item">
+  <div class="course-info">
+  <h4>Data Science Fundamentals</h4>
+  <p>55% Complete</p>
+  </div>
+  <div class="progress-bar">
+  <div class="progress" style="width: 55%;"></div>
+  </div>
+  </li>
+  <li class="course-item">
+  <div class="course-info">
+  <h4>Mobile App Design</h4>
+  <p>20% Complete</p>
+  </div>
+  <div class="progress-bar">
+  <div class="progress" style="width: 20%;"></div>
+  </div>
+  </li>
+  </ul>
+  </div>
+  <div class="widget-footer">
+  <a href="#">View All Courses <i class="fas fa-arrow-right"></i></a>
+  </div>
+  </div>
+ 
+
+  <div class="widget glass widget-recent-activity">
+  <div class="widget-header">
+  <h3><i class="fas fa-history"></i> Recent Activity</h3>
+  <button class="widget-options"><i class="fas fa-ellipsis-h"></i></button>
+  </div>
+  <div class="widget-content">
+  <ul class="activity-list">
+  <li class="activity-item">
+  <i class="fas fa-check-circle activity-icon success"></i>
+  <span>Completed Quiz: Introduction to React</span>
+  <small>1 hour ago</small>
+  </li>
+  <li class="activity-item">
+  <i class="fas fa-upload activity-icon info"></i>
+  <span>Submitted Assignment: Module 4 Project</span>
+  <small>3 hours ago</small>
+  </li>
+  <li class="activity-item">
+  <i class="fas fa-exclamation-triangle activity-icon warning"></i>
+  <span>Reminder: Assignment 3 Due Tomorrow</span>
+  <small>5 hours ago</small>
+  </li>
+  </ul>
+  </div>
+  <div class="widget-footer">
+  <a href="#">View All Activity <i class="fas fa-arrow-right"></i></a>
+  </div>
+  </div>
+ 
+
+  <div class="widget glass widget-upcoming-events">
+  <div class="widget-header">
+  <h3><i class="fas fa-calendar-week"></i> Upcoming Events</h3>
+  <button class="widget-options"><i class="fas fa-ellipsis-h"></i></button>
+  </div>
+  <div class="widget-content">
+  <ul class="event-list">
+  <li class="event-item">
+  <h4>Live Session: Advanced CSS</h4>
+  <p><i class="fas fa-clock"></i> Tomorrow, 2:00 PM - 3:00 PM</p>
+  </li>
+  <li class="event-item">
+  <h4>Project Deadline: UI/UX Redesign</h4>
+  <p><i class="fas fa-calendar-alt"></i> Next Monday</p>
+  </li>
+  </ul>
+  </div>
+  <div class="widget-footer">
+  <a href="#">View Calendar <i class="fas fa-arrow-right"></i></a>
+  </div>
+  </div>
+ 
+
+  <div class="widget glass widget-quick-stats">
+  <div class="widget-header">
+  <h3><i class="fas fa-chart-bar"></i> Quick Stats</h3>
+  <button class="widget-options"><i class="fas fa-ellipsis-h"></i></button>
+  </div>
+  <div class="widget-content stats-grid">
+  <div class="stat-card">
+  <div class="stat-number">12</div>
+  <div class="stat-label">New Courses</div>
+  </div>
+  <div class="stat-card">
+  <div class="stat-number">45</div>
+  <div class="stat-label">New Students</div>
+  </div>
+  <div class="stat-card">
+  <div class="stat-number">8</div>
+  <div class="stat-label">Instructors Online</div>
+  </div>
+  <div class="stat-card">
+  <div class="stat-number">92%</div>
+  <div class="stat-label">Completion Rate</div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </main>
+  </div>
+ 
+
+  <script>
+  function navigate(page) {
+  // Remove active class from all menu items
+  document.querySelectorAll('.menu-item').forEach(item => {
+  item.classList.remove('active');
+  });
+ 
+
+  // Add active class to clicked item
+  if (event.target.closest('.menu-item')) {
+  event.target.closest('.menu-item').classList.add('active');
+  }
+ 
+
+  // Close mobile menu if open
+  if (window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('mobile-open')) {
+  toggleMobileMenu();
+  }
+ 
+
+  console.log(`Navigating to: ${page}`);
+  // Update page content here (replace with your actual logic)
+  }
+ 
+
+  function toggleMobileMenu() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.querySelector('.mobile-menu-toggle').classList.toggle('open');
+  }
+ 
+
+  function logout() {
+  console.log('Logging out...');
+  // Implement your logout logic here
+  }
+ 
+
+  function showUserMenu() {
+  console.log('Showing user menu...');
+  // Implement your user menu logic here
+  }
+ 
+
+  // Basic widget options functionality
+  document.querySelectorAll('.widget-options').forEach(button => {
+  button.addEventListener('click', function() {
+  console.log('Widget options clicked');
+  // Implement your widget options logic here
+  });
+  });
+  </script>
+ </body>
+ </html>
