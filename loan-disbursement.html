@@ -65,7 +65,7 @@
                     <div class="empty-text">Select a loan from the list to proceed with disbursement</div>
                 </div>
                 <div class="selected-loan-info" id="selectedLoanInfo">
-                    <h4 style="margin-bottom: 15px;">Selected Loan</h4>
+                    <h4 class="mb-15">Selected Loan</h4>
                     <div id="loanSummary"></div>
                 </div>
                 <div class="disbursement-form" id="disbursementForm">
@@ -174,7 +174,7 @@
             document.getElementById('selectedLoanInfo').classList.add('show');
             document.getElementById('disbursementForm').classList.add('show');
             const summary = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                <div class="summary-grid">
                     <div><strong>Customer:</strong> ${selectedLoan.customerName}</div>
                     <div><strong>Amount:</strong> $${Number(selectedLoan.amount).toLocaleString()}</div>
                     <div><strong>Type:</strong> ${selectedLoan.product||''}</div>

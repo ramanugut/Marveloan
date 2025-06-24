@@ -31,7 +31,7 @@
                 <button class="action-btn" id="exportBtn">📊 Export List</button>
                 <button class="action-btn" id="importBtn">📥 Import Customers</button>
                 <button class="action-btn primary-btn" id="addBtn">➕ Add New Customer</button>
-                <input type="file" id="importFile" accept="application/json" style="display:none">
+                <input type="file" id="importFile" accept="application/json" class="hidden">
             </div>
         </div>
         <div class="stats-toggle" onclick="toggleStats()">
@@ -171,8 +171,8 @@ function renderTable(pageList){
         const tr=document.createElement('tr');
         tr.innerHTML=`
             <td><input type="checkbox" data-id="${c.id}" class="rowCheck"></td>
-            <td><div class="customer-info"><div class="customer-avatar" style="background:#4caf50">${(c.firstName?c.firstName[0]:'')+(c.lastName?c.lastName[0]:'')}</div><div class="customer-details"><h4>${c.firstName||''} ${c.lastName||''}</h4><div class="customer-id">${c.nationalId||''}</div></div></div></td>
-            <td><div>${c.phoneNumber||''}</div><div style="font-size:.75rem;opacity:.7;">${c.email||''}</div></td>
+            <td><div class="customer-info"><div class="customer-avatar avatar-green">${(c.firstName?c.firstName[0]:'')+(c.lastName?c.lastName[0]:'')}</div><div class="customer-details"><h4>${c.firstName||''} ${c.lastName||''}</h4><div class="customer-id">${c.nationalId||''}</div></div></div></td>
+            <td><div>${c.phoneNumber||''}</div><div class="text-small text-muted">${c.email||''}</div></td>
             <td><span class="status-badge status-${c.status}">${c.status.charAt(0).toUpperCase()+c.status.slice(1)}</span></td>
             <td>${c.creditScore||'-'}</td>
             <td><span class="loan-count">${activeCount}</span></td>
@@ -195,7 +195,7 @@ function showActionsMenu(id,btn){
     menu.style.padding='.5rem';
     menu.style.borderRadius='.5rem';
     menu.style.zIndex=100;
-    menu.innerHTML = `<div style="cursor:pointer;padding:.25rem 0;" data-act="view">View Profile</div><div style="cursor:pointer;padding:.25rem 0;" data-act="edit">Edit</div><div style="cursor:pointer;padding:.25rem 0;" data-act="delete">Delete</div>`;
+    menu.innerHTML = `<div class="menu-action" data-act="view">View Profile</div><div class="menu-action" data-act="edit">Edit</div><div class="menu-action" data-act="delete">Delete</div>`;
     document.body.appendChild(menu);
     const rect=btn.getBoundingClientRect();
     menu.style.left=rect.left+'px';

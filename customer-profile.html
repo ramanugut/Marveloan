@@ -166,7 +166,7 @@
                         <td>12.5%</td>
                         <td><span class="loan-status status-active">Active</span></td>
                         <td>Jan 15, 2024</td>
-                        <td><button class="action-btn" style="padding: 8px 16px; font-size: 12px;">View Details</button></td>
+                        <td><button class="action-btn btn-small">View Details</button></td>
                     </tr>
                     <tr>
                         <td>LN-2023-087</td>
@@ -176,7 +176,7 @@
                         <td>9.75%</td>
                         <td><span class="loan-status status-completed">Completed</span></td>
                         <td>Mar 20, 2023</td>
-                        <td><button class="action-btn" style="padding: 8px 16px; font-size: 12px;">View Details</button></td>
+                        <td><button class="action-btn btn-small">View Details</button></td>
                     </tr>
                     <tr>
                         <td>LN-2022-156</td>
@@ -186,7 +186,7 @@
                         <td>8.25%</td>
                         <td><span class="loan-status status-completed">Completed</span></td>
                         <td>Aug 10, 2022</td>
-                        <td><button class="action-btn" style="padding: 8px 16px; font-size: 12px;">View Details</button></td>
+                        <td><button class="action-btn btn-small">View Details</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -278,7 +278,7 @@
                     <td>${(l.rate * 100).toFixed(2)}%</td>
                     <td><span class="loan-status ${statusClass(l.status || '')}">${l.status || ''}</span></td>
                     <td>${new Date(parseInt(l.id)).toLocaleDateString()}</td>
-                    <td><button class="action-btn" style="padding: 8px 16px; font-size: 12px;">View Details</button></td>`;
+                    <td><button class="action-btn btn-small">View Details</button></td>`;
                 loanRows.appendChild(tr);
             });
         }
